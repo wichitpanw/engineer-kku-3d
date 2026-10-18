@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>คณะวิศวกรรมศาสตร์ มข. · 3D Campus</title>
+    <meta name="theme-color" content="#e7eee9" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20261018-sidebar" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./vendor/three/three.module.js",
+          "three/addons/": "./vendor/three/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main id="viewer" aria-label="แผนที่สามมิติคณะวิศวกรรมศาสตร์ มข.">
+      <div id="loading">
+        <span></span><b>กำลังสร้างพื้นที่สามมิติ</b
+        ><small>คณะวิศวกรรมศาสตร์ · มหาวิทยาลัยขอนแก่น</small>
+      </div>
+      <div id="webglError" hidden>
+        เปิด WebGL ไม่สำเร็จ กรุณาเปิดการเร่งกราฟิกในเบราว์เซอร์
+      </div>
+    </main>
+    <header>
+      <a href="#" class="brand" aria-label="EN KKU"
+        ><span class="brand-symbol">EN<span>KKU</span></span
+        ><span><b>ENGINEERING</b><small>KHON KAEN UNIVERSITY</small></span></a
+      >
+      <div class="top-pill">
+        <i></i> CAMPUS EXPLORER <span>/</span> ENGINEERING
+      </div>
+      <button
+        class="square"
+        id="helpButton"
+        title="วิธีควบคุม"
+        aria-label="วิธีควบคุม"
+      >
+        ?
+      </button>
+    </header>
+    <aside class="panel" id="panel">
+      <div class="panel-kicker">EN KKU CAMPUS <span>17 BUILDINGS</span></div>
+      <h1>คณะวิศวกรรมศาสตร์<span>KHON KAEN UNIVERSITY</span></h1>
+      <p class="subtitle">สำรวจอาคาร ถนน และพื้นที่รอบคณะในสามมิติ</p>
+      <div class="panel-tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-tab="building">
+          สำรวจอาคาร</button
+        ><button role="tab" aria-selected="false" data-tab="references">
+          หลักฐาน <span id="referenceCount">03</span>
+        </button>
+      </div>
+      <section id="buildingTab">
+        <div class="campus-views">
+          <button data-view="overview" class="selected">◈ ทั้งคณะ</button
+          ><button data-view="top">⌗ มุมบน</button
+          ><button id="labelsButton" aria-pressed="true">รหัสตึก</button>
+        </div>
+        <label class="search-label" for="buildingSearch">ค้นหาอาคาร</label>
+        <div class="building-search">
+          <span>⌕</span
+          ><input
+            id="buildingSearch"
+            type="search"
+            placeholder="EN16, CB, ห้องสมุด…"
+            autocomplete="off"
+          />
+        </div>
+        <div class="list-heading">
+          <span>อาคารในคณะ</span><small id="resultCount">17 อาคาร</small>
+        </div>
+        <div
+          id="buildingList"
+          class="building-list"
+          aria-label="เลือกอาคาร"
+        ></div>
+        <div id="selectedBuilding" class="selected-building" aria-live="polite">
+          <span class="eyebrow">CAMPUS OVERVIEW</span>
+          <h2>เริ่มสำรวจทั้งคณะ</h2>
+          <p>คลิกอาคารบนแผนที่ หรือค้นหาชื่อและรหัสตึก</p>
+        </div>
+        <div class="view-grid building-view-grid" id="buildingViews" hidden>
+          <button data-view="front">ด้านหน้า</button
+          ><button data-view="east">ตะวันออก</button
+          ><button data-view="rear">ด้านหลัง</button
+          ><button data-view="west">ตะวันตก</button>
+          <button data-view="entrance" data-pien>ทางเข้า</button
+          ><button data-view="hall" data-pien>โถงใต้ตึก</button
+          ><button data-view="bridge" data-pien>สะพานเชื่อม</button>
+          <button data-view="cb-rear" data-cb hidden>หลัง CB / EN17</button>
+          <button data-view="cb-wood" data-cb hidden>แนวป่า CB</button>
+          <button data-view="cb-site" data-cb hidden>ผังรอบ CB</button>
+          <button data-view="cb-front" data-cb hidden>หน้า CB</button>
+          <button data-view="cb-hall" data-cb hidden>โถงใต้ CB</button>
+          <button data-view="cb-stair" data-cb hidden>บันได CB</button>
+          <button data-view="east-court" data-east hidden>ลานกลาง</button>
+          <button data-view="ee-entry" data-east hidden>ทางเข้าไฟฟ้า</button>
+          <button data-view="cpe-entry" data-east hidden>ทางเข้าคอมฯ</button>
+          <button data-view="ee-old" data-east hidden>ตึกเก่าเลข 11</button>
+          <button data-view="east-street" data-east hidden>ถนนหน้าอาคาร</button>
+        </div>
+        <button id="walkButton" class="primary">
+          เข้าโหมดเดินชม <span>↗</span>
+        </button>
+        <div class="layer-settings">
+          <label
+            ><span>♧ ต้นไม้และรายละเอียดพื้นที่</span
+            ><input type="checkbox" id="landscapeToggle" checked
+          /></label>
+          <label
+            ><span>▱ แสดงอาคารโดยรอบ</span
+            ><input type="checkbox" id="contextToggle" checked
+          /></label>
+        </div>
+        <div class="model-note">
+          <span></span> ภายนอกอาคาร · พิกัดและสัดส่วนประมาณ<button
+            id="accuracyButton"
+            aria-label="รายละเอียดความแม่นยำ"
+          >
+            ⓘ
+          </button>
+        </div>
+      </section>
+      <section id="referencesTab" hidden>
+        <p class="reference-intro">
+          <span id="referenceHeading">แผนที่ทั้งคณะและหลักฐานรายอาคาร</span>
+        </p>
+        <div class="reference-gallery" id="referenceGallery"></div>
+        <div id="buildingSources" class="building-sources"></div>
+        <a
+          class="source-link"
+          href="https://cesium.kku.ac.th/web/pienvichit12/"
+          target="_blank"
+          rel="noreferrer"
+          >เปิดชุดภาพ 360° ของ KKU ↗</a
+        >
+        <div class="reference-note">
+          ภาพ Street View และภาพมุมสูง: ผู้ใช้ให้มา<br />ภาพป้ายทางเข้า: KKU
+          Pienvichit 360
+        </div>
+      </section>
+    </aside>
+    <button
+      id="panelToggle"
+      class="panel-toggle"
+      aria-label="หุบแถบด้านซ้าย"
+      aria-controls="panel"
+      aria-expanded="true"
+      title="หุบแถบด้านซ้าย"
+    >
+      ‹
+    </button>
+    <div id="buildingLabels" class="building-labels"></div>
+    <div class="scene-label" id="sceneLabel" hidden>
+      <i></i><span><b>ตึกเพียรวิจิตร</b><small>PIENVICHIT · EN 16</small></span>
+    </div>
+    <div class="walk-hud" id="walkHud" hidden>
+      <span
+        >W A S D / ลูกศร <small>เดิน</small> · ลากเมาส์
+        <small>มองรอบตัว</small></span
+      ><button id="exitWalk">ออกจากโหมดเดิน <b>Esc</b></button>
+    </div>
+    <div class="map-tools">
+      <button id="northButton" class="compass" title="หันไปทิศเหนือ">
+        <b>N</b><span id="compassNeedle">▲</span>
+      </button>
+      <div class="zoom-tools">
+        <button id="zoomIn" aria-label="ซูมเข้า">+</button
+        ><button id="zoomOut" aria-label="ซูมออก">−</button>
+      </div>
+      <button
+        class="square"
+        id="resetButton"
+        title="คืนมุมมอง"
+        aria-label="คืนมุมมอง"
+      >
+        ⟳
+      </button>
+    </div>
+    <div class="minimap" id="minimap">
+      <img
+        src="assets/faculty-satellite.jpg"
+        alt="ภาพดาวเทียมบริเวณคณะวิศวกรรมศาสตร์ มข."
+      />
+      <svg
+        id="minimapOverlay"
+        viewBox="0 0 1280 1280"
+        aria-label="เลือกอาคารจากแผนที่เล็ก"
+      ></svg>
+      <span class="minimap-caption"
+        >EN KKU · <b id="miniSelected">CAMPUS</b></span
+      >
+    </div>
+    <footer>
+      <div class="interaction-hint">
+        <span>◉</span> ลากเพื่อหมุน <i></i> เลื่อนเพื่อซูม
+        <i></i> คลิกขวาลากเพื่อเลื่อน
+      </div>
+      <div class="bottom-controls">
+        <button id="dayNight" aria-pressed="false">
+          ☀ <span>กลางวัน</span></button
+        ><button id="fullscreenButton" aria-label="เต็มหน้าจอ">⛶</button>
+        <div class="scale"><span></span><b id="scaleLabel">20 m</b></div>
+      </div>
+    </footer>
+    <div class="attribution">
+      Mini-map imagery © Esri, Maxar, Earthstar Geographics · Ground modeled in
+      3D
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <dialog id="photoDialog">
+      <button class="dialog-close" aria-label="ปิดภาพ">×</button
+      ><img id="photoImage" alt="" />
+      <div class="photo-caption">
+        <b id="photoTitle"></b><span id="photoDescription"></span>
+      </div>
+    </dialog>
+    <dialog id="infoDialog">
+      <button class="dialog-close" aria-label="ปิด">×</button
+      ><span class="dialog-kicker">MODEL DOCUMENTATION</span>
+      <h2>แบบจำลองจากภาพจริง</h2>
+      <p>
+        ผังอาคารเทียบ enmap1–3, Google Maps และภาพ Esri มีโมเดล 17 รหัสอาคาร
+        รายละเอียดภายนอกของแต่ละตึกอยู่คนละระยะ
+        สามารถดูสถานะและหลักฐานเมื่อเลือกตึก
+      </p>
+      <p>
+        ยังไม่มีแบบสถาปัตยกรรมหรือผลรังวัด
+        สัดส่วนและตำแหน่งบางส่วนจึงเป็นการประมาณ
+        ขณะนี้เน้นภายนอกอาคารและโถงเปิดใต้ตึก
+      </p>
+      <p>ความตรง 100% ต้องตรวจเทียบกับแบบก่อสร้างและสำรวจหน้างานเพิ่มเติม</p>
+      <a
+        href="https://cesium.kku.ac.th/web/pienvichit12/"
+        target="_blank"
+        rel="noreferrer"
+        >แหล่งภาพ KKU 360 ↗</a
+      >
+    </dialog>
+    <dialog id="helpDialog">
+      <button class="dialog-close" aria-label="ปิด">×</button
+      ><span class="dialog-kicker">EXPLORE AT YOUR PACE</span>
+      <h2>สำรวจคณะวิศวกรรมศาสตร์</h2>
+      <dl>
+        <dt>ลากเมาส์ซ้าย</dt>
+        <dd>หมุนรอบอาคาร</dd>
+        <dt>ลูกกลิ้ง / สองนิ้ว</dt>
+        <dd>ซูมเข้าและออก</dd>
+        <dt>ลากเมาส์ขวา</dt>
+        <dd>เลื่อนตำแหน่งมุมมอง</dd>
+        <dt>โหมดเดิน</dt>
+        <dd>
+          WASD หรือลูกศรเพื่อเดิน ลากเมาส์เพื่อมอง<br />
+          Esc เพื่อออก
+        </dd>
+      </dl>
+    </dialog>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
