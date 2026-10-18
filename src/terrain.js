@@ -445,8 +445,12 @@ export function createTerrain(scene) {
             bb = [a[0] + (b[0] - a[0]) * v, a[1] + (b[1] - a[1]) * v];
           const middle = [(aa[0] + bb[0]) / 2, (aa[1] + bb[1]) / 2],
             probe = [rectangle(...middle, 0.5, 0.5)];
-          const court = layout.paving.find((p) => p.id === "east-courtyard");
-          if (court && area(clip.intersection(probe, court.geometry)) > 0.01) {
+          const inOpenCourt = layout.paving.some(
+            (p) =>
+              ["east-courtyard", "en17-entrance-court"].includes(p.id) &&
+              area(clip.intersection(probe, p.geometry)) > 0.01,
+          );
+          if (inOpenCourt) {
             distance += len / n;
             continue; // Painted bays on a continuous court, not raised parking islands.
           }
@@ -804,6 +808,27 @@ export function createTerrain(scene) {
       if (contains([xx, zz], cbForest))
         woodlandTree(details, xx, zz, 12 + random() * 7);
     }
+  // Mature entrance trees shown in the EN17 south approach photo, off the lab
+  // footprints and the covered walk. Small planting beds stay above the court.
+  for (const [x, z, h] of [
+    [177.5, -46, 12],
+    [178.5, -39, 13],
+    [195, -46.5, 14],
+    [207, -46, 12],
+  ]) {
+    if (
+      !contains([x, z], layout.occupied) &&
+      !contains([x, z], drivingAndParking)
+    ) {
+      cylinder(details, x, 0.08, z, 1.2, 0.14, M.soil, 20);
+      tree(details, x, z, h);
+    }
+  }
+  hedge(details, [179.4, -33], [179.4, -35], 0.7);
+  hedge(details, [179.4, -35], [180, -43], 0.7);
+  // Planted island in front of the department sign, visible in the close entrance photo.
+  box(details, 194, 0.065, -45, 15, 0.13, 4, M.soil);
+  hedge(details, [187, -43.1], [201, -43.1], 0.55);
   // Lamps follow the verified public lanes and remain off their surfaces.
   for (const [x, z] of [
     [-61, -120],

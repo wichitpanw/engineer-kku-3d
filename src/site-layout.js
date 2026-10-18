@@ -525,6 +525,16 @@ export const pedestrianLinks = [
 ];
 export const plazas = [
   {
+    id: "en17-entrance-court",
+    clearBuildings: true,
+    polygon: [
+      [172, -73],
+      [232, -73],
+      [232, -30.75],
+      [174, -30.75],
+    ],
+  },
+  {
     id: "cb-en17-rear-path",
     polygon: [
       [165.5, -108.5],
@@ -546,8 +556,8 @@ export const plazas = [
     id: "cb-forecourt",
     polygon: [
       [162, -168],
-      [212, -168],
-      [212, -136],
+      [244, -168],
+      [244, -136],
       [162, -136],
     ],
   },
@@ -615,16 +625,45 @@ export function makeSiteLayout() {
       ),
       ...roundabouts.map((r) => [circle(...r.center, r.innerRadius, 48)]),
     ),
-    driveways = parkingAreas.map((p) => {
-      const geometry = stroke(p.entry, p.kind === "car" ? 4 : 2.4);
-      return {
-        id: p.id,
-        surface: p.surface,
-        geometry,
-        pavingGeometry:
-          p.surface === "pavers" ? clip.difference(geometry, roadSurface) : [],
-      };
-    }),
+    driveways = [
+      ...parkingAreas.map((p) => {
+        const geometry = stroke(p.entry, p.kind === "car" ? 4 : 2.4);
+        return {
+          id: p.id,
+          surface: p.surface,
+          geometry,
+          pavingGeometry:
+            p.surface === "pavers"
+              ? clip.difference(geometry, roadSurface)
+              : [],
+        };
+      }),
+      (() => {
+        const geometry = clip.union(
+          stroke(
+            [
+              [185, -28],
+              [185, -38],
+            ],
+            7.5,
+          ),
+          polygon([
+            [179, -28],
+            [191, -28],
+            [190, -32],
+            [188.75, -35],
+            [181.25, -35],
+            [180, -32],
+          ]),
+        );
+        return {
+          id: "en17-entrance",
+          surface: "pavers",
+          geometry,
+          pavingGeometry: clip.difference(geometry, roadSurface),
+        };
+      })(),
+    ],
     vehicleSurface = clip.union(
       roadSurface,
       ...driveways.map((d) => d.geometry),
@@ -637,6 +676,20 @@ export function makeSiteLayout() {
       ...p,
       geometry: clip.difference(
         polygon(p.polygon),
+        ...(p.clearBuildings ? [occupied] : []),
+        ...(p.id === "en17-entrance-court"
+          ? [
+              polygon([
+                [174, -51],
+                [177, -51],
+                [181.3, -46],
+                [181.3, -36],
+                [180.6, -33],
+                [178.8, -31],
+                [174, -31],
+              ]),
+            ]
+          : []),
         vehicleSurface,
         ...parking.map((p) => p.geometry),
       ),

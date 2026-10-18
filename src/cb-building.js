@@ -133,7 +133,100 @@ function stairs(p, x, z, width, startY, endY, direction = 1, run = 6.8) {
   }
 }
 
-/** Photo-derived north facade. Hidden rear remains a provisional exterior envelope. */
+function sideStairHall(p, detail) {
+  // Local +Z faces the north entrance, between x=-18 and x=-28.
+  for (const x of [-27, -18.5])
+    for (const z of [-7.5, 3.2, 12.5]) box(p, x, 5.1, z, 0.34, 10.2, 0.34);
+  box(p, -22.75, 2.8, 4.4, 8.85, 0.28, 2.6);
+  box(p, -22.75, 6.35, 10.8, 8.85, 0.3, 3.8);
+  // Short links bridge the air gaps to both wings. The eastern wing is staggered
+  // 5 m towards the north; the landing meets its open inner face behind the front.
+  box(p, -28.3, 6.35, 10.8, 3.1, 0.3, 3.8);
+  box(p, -17.8, 6.35, 10.8, 2.5, 0.3, 3.8);
+  box(p, -22.75, 6.35, -3.5, 8.85, 0.3, 8);
+  box(p, -22.75, 4.55, 3, 8.85, 3.25, 0.25);
+  box(p, -22.75, 10.2, 2.4, 10.2, 0.35, 22);
+  // Concrete roof edge / upper metal coping follows the photo's white folded roof.
+  box(p, -22.75, 10.55, 13.25, 10.2, 0.5, 0.12, M.trim);
+  stairs(p, -25.4, 11.8, 2.55, 0.45, 2.8, -1, 6.1);
+  stairs(p, -20.1, 5.7, 2.55, 2.8, 6.35, 1, 6.1);
+  // Lower portico: wide shallow steps, flat concrete cover and slender white columns.
+  box(p, -22.75, 0.35, 21, 9, 0.25, 16);
+  box(p, -22.75, 3.8, 21, 9.3, 0.28, 16.4);
+  for (const x of [-27, -18.5])
+    for (const z of [14.5, 21, 28.5]) box(p, x, 2.1, z, 0.25, 3.6, 0.25);
+  for (let i = 0; i < 4; i++)
+    box(p, -22.75, 0.06 + i * 0.08, 30 - i * 0.42, 9, 0.12 + i * 0.16, 0.6);
+  if (!detail) return;
+  rail(p, [-27, 5.5], [-27, 12.5], 2.95);
+  rail(p, [-27, 12.5], [-23.9, 12.5], 2.95);
+  rail(p, [-23.9, 5.5], [-18.5, 5.5], 2.95);
+  rail(p, [-27, 12.5], [-18.5, 12.5], 6.5);
+  rail(p, [-29.8, 12.5], [-27, 12.5], 6.5);
+  rail(p, [-18.5, 12.5], [-16.55, 12.5], 6.5);
+  rail(p, [-27, -7.5], [-27, 0.5], 6.5);
+  rail(p, [-27, 14.5], [-27, 28.5], 0.5);
+  rail(p, [-18.5, 14.5], [-18.5, 28.5], 0.5);
+  // White beams and discreet conduit below the canopy, no invented room interiors.
+  for (const z of [-7, 3.2, 12.5]) box(p, -22.75, 9.8, z, 8.8, 0.42, 0.26);
+  for (const z of [16, 23, 28]) box(p, -22.75, 3.58, z, 8.5, 0.2, 0.2);
+  for (const y of [6.1, 9.95])
+    beam(p, [-26.4, y, -6.5], [-26.4, y, 11.5], 0.025, M.trim);
+  // Low permanent planting trough beside the first stair.
+  box(p, -27.1, 0.26, 7, 0.6, 0.45, 7);
+}
+
+function secondWing(p, detail) {
+  // Additional eastern roof mass visible in the supplied aerial; same EN09 identity.
+  const g = new THREE.Group();
+  g.position.set(-43, 0, 5);
+  p.add(g);
+  box(g, 0, 0.16, 0, 30, 0.32, 27, M.tile);
+  box(g, 0, 6.2, 0, 28, 0.3, 24.5, M.soffit);
+  box(g, 0, 9.3, -11.8, 28, 6.1, 0.25);
+  box(g, -13.9, 9.3, 0, 0.25, 6.1, 24);
+  box(g, 0, 12.4, 0, 28.2, 0.25, 24.5);
+  box(g, 0, 10.95, 11.8, 28, 2.8, 0.25);
+  box(g, 0, 6.55, 11.8, 28, 0.6, 0.25);
+  for (const x of [-12, -4, 4, 12])
+    for (const z of [-10.7, 11.5]) {
+      box(g, x, 2, z, 0.65, 4, 0.7, M.pier);
+    }
+  for (let x = -14; x <= 14; x += 2.8) {
+    box(g, x, 8.25, 11.8, 0.32, 3.4, 0.28);
+    for (const z of [-13.5, 13.5]) {
+      beam(g, [x, 3.7, z], [x, 13.6, z], 0.12);
+      if (x < 13.9)
+        for (const y of [3.7, 6.1, 8.6, 11.1]) {
+          beam(g, [x, y, z], [x + 2.8, y + 2.5, z], 0.08);
+          beam(g, [x, y + 2.5, z], [x + 2.8, y, z], 0.08);
+        }
+    }
+  }
+  for (const z of [-13.5, 13.5])
+    for (const y of [3.7, 6.1, 8.6, 11.1, 13.6])
+      beam(g, [-14, y, z], [14, y, z], 0.12);
+  // Outer end of the wing retains the same visible orange braced cage.
+  for (let z = -13.5; z < 13.5; z += 3.375)
+    for (const y of [3.7, 6.1, 8.6, 11.1]) {
+      beam(g, [-14, y, z], [-14, y + 2.5, z + 3.375], 0.08);
+      beam(g, [-14, y + 2.5, z], [-14, y, z + 3.375], 0.08);
+    }
+  const roof = box(g, 0, 14.1, 0, 32, 0.15, 30.3, M.roof);
+  roof.rotation.x = -0.025;
+  box(g, 0, 6.35, 12.65, 28, 0.2, 1.7);
+  if (!detail) return;
+  for (let x = -12.6; x < 14; x += 2.8) {
+    box(g, x, 8.25, 11.86, 2.4, 3.3, 0.09, M.dark);
+    box(g, x, 8.25, 11.95, 0.06, 3.3, 0.04, M.trim);
+    box(g, x, 8.25, 11.95, 2.4, 0.06, 0.04, M.trim);
+  }
+  rail(g, [-13.7, 13.1], [13.7, 13.1], 6.5);
+  for (let x = -15; x <= 15; x += 1.2)
+    beam(g, [x, 14.4, -15], [x, 13.7, 15], 0.025, M.trim);
+}
+
+/** Photo-derived visible facades; unphotographed rear details remain provisional. */
 export function createCB(root, detail) {
   const p = new THREE.Group();
   p.position.set(184, 0, -122);
@@ -141,18 +234,21 @@ export function createCB(root, detail) {
   root.add(p);
   // Main footprint remains registered at 37 x 27 m. Steel sits outside the white envelope.
   box(p, 0, 0.16, 0, 37, 0.32, 27, M.tile);
-  box(p, 0, 4.05, -0.3, 34.5, 0.35, 24.7, M.soffit);
+  box(p, 0, 6.2, -0.3, 34.5, 0.35, 24.7, M.soffit);
   // Upper hall: exterior walls only, leaving the entire lower level open between piers.
-  box(p, 0, 8.3, -11.8, 34.5, 8.15, 0.28);
-  for (const side of [-1, 1]) box(p, side * 17.1, 8.3, 0, 0.28, 8.15, 24);
+  box(p, 0, 9.3, -11.8, 34.5, 6.1, 0.28);
+  box(p, 17.1, 9.3, 0, 0.28, 6.1, 24);
+  // Leave a real doorway from the high stair landing into the occupied wing.
+  box(p, -17.1, 9.3, -3, 0.28, 6.1, 18);
+  box(p, -17.1, 11.1, 9, 0.28, 2.5, 6);
   box(p, 0, 12.42, 0, 34.7, 0.24, 24.6, M.soffit);
   // Front wall made from piers and spandrels rather than glass painted over solid walls.
-  box(p, 0, 4.55, 11.9, 34.4, 0.6, 0.25);
-  box(p, 0, 10.3, 11.9, 34.4, 4.1, 0.25);
+  box(p, 0, 6.55, 11.9, 34.4, 0.6, 0.25);
+  box(p, 0, 10.95, 11.9, 34.4, 2.8, 0.25);
   const openings = [-12, -5, 2, 9];
   for (let x = -17.2; x < 17.2; x += 0.4) {
     if (!openings.some((c) => Math.abs(x - c) < 1.35))
-      box(p, x, 6.6, 11.9, 0.4, 3.7, 0.25);
+      box(p, x, 8.3, 11.9, 0.4, 3.3, 0.25);
   }
   for (const x of [-15, -5, 5, 15])
     for (const z of [-10.5, 11.8]) {
@@ -163,7 +259,7 @@ export function createCB(root, detail) {
       pier.castShadow = pier.receiveShadow = true;
       p.add(pier);
     }
-  box(p, 0, 4.1, 13.05, 36.6, 0.22, 2.6);
+  box(p, 0, 6.3, 13.05, 36.6, 0.22, 2.6);
   // Permanent roof is a shallow sheet with a generous overhang, not an extra storey.
   const roof = box(p, 0, 14.12, 0, 39.4, 0.16, 30.3, M.roof);
   roof.rotation.x = -0.025;
@@ -197,34 +293,23 @@ export function createCB(root, detail) {
         [8.6, 11.1],
         [11.1, 13.65],
       ]) {
-        if (side === -1 && z > 6 && z < 11 && a === 3.7) continue;
+        if (side === -1 && z > 6 && z < 13 && a < 8.6) continue;
         beam(p, [x, a, z], [x, b, z + 3.4], 0.085);
         beam(p, [x, b, z], [x, a, z + 3.4], 0.085);
       }
   }
-  // Eastern switchback stair: thin treads keep the space beneath it open.
-  stairs(p, -22.2, 9.7, 2.1, 0.28, 2.2, -1, 3.6);
-  box(p, -21, 2.2, 5.5, 6, 0.25, 1.4);
-  stairs(p, -19.7, 6.1, 2.1, 2.2, 4.2, 1, 3.6);
-  box(p, -19.4, 4.2, 10.5, 3.8, 0.25, 1.6);
-  box(p, -21, 4.2, -0.6, 6, 0.25, 11);
-  box(p, -21, 7.25, 2.5, 6.3, 0.2, 18.8, M.roof);
-  for (const x of [-23.5, -18.5])
-    for (const z of [-6, 5.4, 11.7]) box(p, x, 3.65, z, 0.3, 7.3, 0.3);
-  if (detail) {
-    rail(p, [-23.5, -6], [-23.5, 5], 4.35);
-    rail(p, [-23.5, 4.9], [-18.5, 4.9], 2.35);
-    rail(p, [-20.8, 11.2], [-17.6, 11.2], 4.35);
-  }
+  // Two-level concrete stair hall between the two orange steel wings.
+  sideStairHall(p, detail);
+  secondWing(p, detail);
   if (!detail) return;
   for (const x of openings) {
-    box(p, x, 6.6, 11.96, 2.6, 3.7, 0.09, M.dark);
+    box(p, x, 8.3, 11.96, 2.6, 3.3, 0.09, M.dark);
     for (const dx of [-1.3, 0, 1.3])
-      box(p, x + dx, 6.6, 12.03, 0.065, 3.7, 0.05, M.trim);
-    box(p, x, 6.6, 12.04, 2.6, 0.06, 0.05, M.trim);
+      box(p, x + dx, 8.3, 12.03, 0.065, 3.3, 0.05, M.trim);
+    box(p, x, 8.3, 12.04, 2.6, 0.06, 0.05, M.trim);
   }
   // Balcony is open to the air and its railing sits in front of the wall.
-  rail(p, [-17.7, 13.2], [17.7, 13.2], 4.23);
+  rail(p, [-17.7, 13.2], [17.7, 13.2], 6.43);
   for (const x of [-15, -5, 5, 15]) {
     beam(p, [x, 3.8, -11.5], [x, 3.8, 13.4], 0.2);
     for (let z = -11.5; z < 13; z += 3.4)
@@ -241,7 +326,7 @@ export function createCB(root, detail) {
     }
   }
 
-  stairs(p, 16, 9.5, 2, 0.28, 4, -1);
+  stairs(p, 16, 12, 2, 0.28, 6.3, -1, 11.6);
   for (let i = 0; i < 3; i++)
     box(
       p,
@@ -273,62 +358,4 @@ export function createCB(root, detail) {
     );
   for (let z = -11.5; z < 13; z += 3.4)
     beam(p, [-17.7, 3.72, z], [17.7, 3.72, z], 0.13);
-  // White portal at the foot of the side stair, visible in the additional photos.
-  for (const x of [-23.5, -18.5]) box(p, x, 1.85, 13.4, 0.28, 3.7, 0.3);
-  box(p, -21, 3.62, 13.4, 5.3, 0.3, 0.4);
-}
-
-/** The photographed north wall of EN17. Other faces retain their provisional envelope. */
-export function createEN17North(root, detail) {
-  const beige = material("#b3a18a"),
-    shutter = material("#a29b8c"),
-    white = M.wall;
-  const p = new THREE.Group();
-  root.add(p);
-  // Long laboratory hall, with a high ventilated wall rather than two rows of classroom windows.
-  box(p, 200, 0.15, -86, 54, 0.3, 29, M.soffit);
-  box(p, 200, 3.3, -85.9, 53.6, 6.6, 28.6, white);
-  box(p, 200, 3.3, -100.3, 53.6, 6.6, 0.3, beige);
-  for (let k = 0; k < 3; k++) {
-    const z = -100.5 + ((k + 0.5) * 29) / 3;
-    for (const side of [-1, 1]) {
-      const roof = box(
-        p,
-        200,
-        7.05,
-        z + (side * 29) / 12,
-        55,
-        0.15,
-        Math.hypot(29 / 6, 1.05),
-        M.tile,
-      );
-      roof.rotation.x = side * Math.atan2(1.05, 29 / 6);
-    }
-  }
-  if (!detail) return;
-  // Concrete frame, deep parapet slots, beige horizontal louver courses and roll-up doors.
-  for (let x = 173.4; x < 227; x += 6.6) {
-    box(p, x, 3.4, -100.55, 0.32, 6.8, 0.42, white);
-    box(p, x + 3.15, 6.35, -100.55, 5.95, 0.6, 0.12, M.dark);
-  }
-  for (const y of [0.42, 4.25, 5.75, 6.9])
-    box(p, 200, y, -100.7, 54, 0.3, 0.55, white);
-  for (let y = 0.75; y < 5.7; y += 0.28) {
-    const louver = box(p, 200, y, -100.52, 53.4, 0.13, 0.18, beige);
-    louver.rotation.x = -0.2;
-  }
-  for (const x of [179.5, 199.4, 219.2]) {
-    box(p, x, 2.2, -100.77, 4.1, 4.2, 0.12, shutter);
-    for (let y = 0.25; y < 4.3; y += 0.14)
-      box(p, x, y, -100.85, 4.1, 0.025, 0.025, M.trim);
-    for (const dx of [-2.2, 2.2])
-      box(p, x + dx, 2.2, -100.82, 0.16, 4.4, 0.18, white);
-  }
-  for (const x of [188, 208]) {
-    box(p, x, 3.5, -100.8, 0.85, 0.8, 0.12, M.dark);
-    for (let y = 3.2; y < 3.9; y += 0.1)
-      box(p, x, y, -100.89, 0.74, 0.035, 0.04, M.trim);
-  }
-  for (const x of [174.5, 193.2, 225.6])
-    box(p, x, 3.3, -100.9, 0.11, 6.4, 0.14, white);
 }

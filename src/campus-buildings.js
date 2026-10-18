@@ -1,5 +1,6 @@
 import * as THREE from "three";
-import { createCB, createEN17North } from "./cb-building.js";
+import { createCB } from "./cb-building.js";
+import { createEN17 } from "./en17-building.js";
 import { batch } from "./model.js";
 import { buildings, auxiliaries } from "./campus-data.js";
 import {
@@ -345,8 +346,7 @@ export function createCampusBuildings(scene, pien) {
       if (b.id === "EN18") anniversary(level, detail);
       else if (b.id === "EN09") createCB(level, detail);
       else if (b.id === "EN17") {
-        createEN17North(level, detail);
-        for (const s of b.parts.slice(1)) genericPart(level, s, detail, b.id);
+        createEN17(level, detail);
       } else if (b.id === "EN04") createComputerElectrical(level, detail);
       else if (b.id === "EN11") createElectricalConnected(level, detail);
       else for (const s of b.parts) genericPart(level, s, detail, b.id);

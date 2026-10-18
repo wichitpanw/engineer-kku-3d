@@ -10,6 +10,7 @@ import {
   CAMPUS_BOUNDS,
 } from "./campus-data.js";
 import { pienPhotos } from "./pien-photos.js";
+import { en17Photos } from "./en17-photos.js";
 import { cbPhotos } from "./cb-photos.js";
 import { eastPhotos } from "./east-photos.js";
 const $ = (s) => document.querySelector(s),
@@ -173,7 +174,7 @@ async function start() {
   function focusBuilding(b, side = "front") {
     if (!b?.bounds) return;
     if (b.id === "EN09" && side === "front") {
-      fly([199, 5.4, -163], [184, 7.5, -134], 54);
+      fly([232, 10, -186], [205, 7, -128], 54);
       return;
     }
 
@@ -215,9 +216,11 @@ async function start() {
         ? [...pienPhotos, ...mapsPhotos]
         : ["EN04", "EN11"].includes(b?.id)
           ? [...eastPhotos, ...mapsPhotos]
-          : ["EN09", "EN17"].includes(b?.id)
-            ? [...cbPhotos, ...mapsPhotos]
-            : mapsPhotos;
+          : b?.id === "EN17"
+            ? [...en17Photos, ...mapsPhotos]
+            : b?.id === "EN09"
+              ? [...cbPhotos, ...mapsPhotos]
+              : mapsPhotos;
     $("#referenceCount").textContent = String(currentPhotos.length).padStart(
       2,
       "0",
@@ -345,6 +348,7 @@ async function start() {
       `<div class="selected-heading"><span class="eyebrow">${b.id} / ${escapeHTML(b.en)}</span><button id="clearSelection" aria-label="กลับภาพรวมทั้งคณะ">×</button></div><h2>${escapeHTML(b.name)}</h2><span class="status-badge ${b.status}">${STATUS[b.status]}</span>${b.usage ? `<p class="building-usage">${escapeHTML(b.usage)}</p>` : ""}<p class="evidence-note">${escapeHTML(b.confidence)}</p>`;
     $("#clearSelection").addEventListener("click", () => view("overview"));
     $("#buildingViews").hidden = false;
+    $$("[data-en17]").forEach((e) => (e.hidden = id !== "EN17"));
     $$("[data-cb]").forEach((e) => (e.hidden = id !== "EN09"));
     $$("[data-pien]").forEach((e) => (e.hidden = id !== "EN16"));
     $$("[data-east]").forEach(
@@ -423,10 +427,21 @@ async function start() {
       const presets = {
         "cb-rear": [[167, 2.2, -105.8], [205, 3.2, -105.8], 66],
         "cb-wood": [[154, 2.1, -139], [135, 6, -134], 62],
-        "cb-site": [[156, 130, -89], [156, 0, -132], 45],
+        "cb-site": [[179, 165, -83], [179, 0, -132], 45],
         "cb-front": [[184, 3.5, -162], [184, 8, -134], 58],
         "cb-hall": [[184, 1.7, -138], [184, 2, -119], 65],
-        "cb-stair": [[217, 4, -147], [203, 4.2, -124], 58],
+        "cb-stair": [[219, 4.5, -163], [206, 6, -125], 60],
+      };
+      fly(...presets[name]);
+    } else if (
+      selected?.id === "EN17" &&
+      ["en17-entry", "en17-roof", "en17-north", "en17-door"].includes(name)
+    ) {
+      const presets = {
+        "en17-door": [[187, 4.2, -44], [197.8, 1.4, -54], 54],
+        "en17-entry": [[185, 2.6, -22], [192, 4, -59], 62],
+        "en17-roof": [[242, 100, -32], [200, 0, -75], 48],
+        "en17-north": [[169, 2.2, -105.8], [207, 3.1, -105.8], 66],
       };
       fly(...presets[name]);
     } else if (selected) focusBuilding(selected, name);

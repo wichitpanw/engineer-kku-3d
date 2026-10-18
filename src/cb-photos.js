@@ -1,5 +1,35 @@
 export const cbPhotos = [
   {
+    file: "assets/cb-stagger-reference.png",
+    title: "EN09 · ปีกข้างเยื้องมาด้านหน้า",
+    description:
+      "ภาพและคำทักผู้ใช้ · 18 ต.ค. 2026 · ปีกข้างไม่อยู่แนวหน้าตรงกับปีกหลัก ระยะเยื้องประมาณ 5 ม. ยังไม่ใช่ขนาดรังวัด",
+  },
+  {
+    file: "assets/cb-side-two-wings-reference.png",
+    title: "EN09 · สองปีกและโถงบันได",
+    description:
+      "Google Maps พ.ย. 2020 · Warodom Buacharoen · ผู้ใช้ให้ภาพเพื่อแก้ส่วนต่อด้านข้าง",
+  },
+  {
+    file: "assets/cb-stair-levels-reference.png",
+    title: "ชานพักสองระดับและหลังคาคอนกรีต",
+    description:
+      "ภาพขยายจากภาพอ้างอิงผู้ใช้ · ใช้ปรับระดับระเบียง ราว และโครงสร้างเปิด",
+  },
+  {
+    file: "assets/cb-covered-entry-reference.png",
+    title: "ทางเข้ากว้างมีหลังคาและขั้นบันได",
+    description:
+      "Google Maps พ.ย. 2020 · เสาขาว ราวส้ม หลังคาแบน และทางเชื่อมโถงบันได",
+  },
+  {
+    file: "assets/cb-two-roofs-reference.png",
+    title: "ภาพมุมสูง · EN09 สองปีก",
+    description:
+      "ภาพดาวเทียมจากผู้ใช้ ไม่ระบุวันถ่าย · ใช้ประมาณฐานสองอาคารและรอยต่อกลาง",
+  },
+  {
     file: "assets/cb-woodland-reference.png",
     title: "ป่าข้าง CB · ลำต้นสูงและพื้นโล่ง",
     description: "Google Maps พ.ย. 2020 · Warodom Buacharoen",

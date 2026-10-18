@@ -1,3 +1,4 @@
+import { en17FlatParts, en17Garage, en17EastWing } from "./en17-layout.js";
 // Shared campus registry. Metres, +X east, -Z north; origin is EN16.
 // Footprints traced from the supplied enmap sheets and the inspected Maps aerial.
 // Heights and offsets are estimates, never a surveyed CAD dataset.
@@ -136,7 +137,9 @@ export const buildings = [
     "east",
     [
       part(184, -122, 37, 27, 14.5, "flat"),
-      part(205, -124.5, 6, 19, 7.4, "flat"),
+      part(207, -123, 9, 22, 10.4, "flat"),
+      part(227, -127, 30, 27, 14.5, "flat"),
+      part(207, -143, 9, 16, 3.8, "flat"),
     ],
     {
       aliases: ["CB", "ซีบี", "ตึกโครงเหล็ก"],
@@ -265,15 +268,52 @@ export const buildings = [
   ),
   base(
     "EN17",
-    "ปฏิบัติการวิศวกรรมอุตสาหการ",
+    "อาคารปฏิบัติการวิศวกรรมอุตสาหการ",
     "Industrial Engineering Laboratories",
     "east",
-    [part(200, -86, 54, 29, 7.6, "sheds"), part(218, -60, 16, 18, 8)],
+    [
+      part(200, -86, 54, 29, 10.1, "gable"),
+      part(
+        en17Garage.x,
+        en17Garage.z,
+        en17Garage.w,
+        en17Garage.d,
+        en17Garage.h,
+        "flat",
+      ),
+      ...en17FlatParts.map((p) =>
+        part(p.x, p.z, p.w, p.d, p.h, "flat", p.rotation),
+      ),
+      part(
+        en17EastWing.x,
+        en17EastWing.z,
+        en17EastWing.w,
+        en17EastWing.d,
+        en17EastWing.h,
+        "gable",
+      ),
+    ],
     {
       phase: 3,
       confidence:
-        "ผนังด้านติด CB ตรวจจากภาพ ม.ค. 2023: บานเกล็ดครีม ประตูม้วน และทางเดิน; ผู้ใช้ยืนยันว่าเป็น EN17 ส่วนด้านอื่นยังประมาณ",
-      sources: ["enmap1", "enmap3", "maps-aerial", "cb-rear-photos"],
+        "หลังคาและส่วนต่ออ้างอิงภาพดาวเทียม; ผนัง บานเกล็ด ประตูม้วนและลานจากภาพผู้ใช้ 2019/2023; ขนาดและส่วนที่ต้นไม้บังยังประมาณ",
+      status: "detail",
+      aliases: [
+        "workshop",
+        "shop",
+        "เวิร์กช็อป",
+        "ปฏิบัติการวิศวกรรมอุตสาหการ",
+      ],
+      usage: "ชื่อเรียก: อาคาร Workshop",
+      sources: [
+        "enmap1",
+        "enmap3",
+        "maps-aerial",
+        "cb-rear-photos",
+        "en17-maps",
+        "en17-official",
+        "user-en17-name",
+      ],
     },
   ),
   base(
@@ -324,6 +364,18 @@ export const auxiliaries = [
   },
 ];
 export const sourceCatalog = {
+  "user-en17-name": {
+    label:
+      "ชื่อตามป้าย อาคารปฏิบัติการวิศวกรรมอุตสาหการ · ผู้ใช้ยืนยัน 18 ต.ค. 2026",
+  },
+  "en17-maps": {
+    label: "Google Maps · หมุด EN17 · ภาพ ส.ค. 2026",
+    url: "https://maps.app.goo.gl/WaDyynRTcSH71rnt7",
+  },
+  "en17-official": {
+    label: "คณะวิศวกรรมศาสตร์ · ข่าว 31 ส.ค. 2026 · ห้อง 17204 ชั้น 2 EN17",
+    url: "https://www.en.kku.ac.th/web/วิศวะ-มข-ร่วมกับ-สวทช-เปิ/",
+  },
   "cb-rear-photos": {
     label:
       "ภาพผู้ใช้ พ.ย. 2020 / ม.ค. 2023 · ด้านหลัง CB และผนัง EN17 ยืนยันโดยผู้ใช้",
