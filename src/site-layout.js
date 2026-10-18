@@ -1,3 +1,4 @@
+import { en14Garden } from "./en14-layout.js";
 import clip from "../vendor/polygon-clipping/index.js";
 import { buildings, auxiliaries } from "./campus-data.js";
 export const SITE_REFERENCE = {
@@ -386,11 +387,7 @@ export const parkingAreas = [
       [-10, 62],
       [-34, 38],
     ],
-    entry: [
-      [-31, 71],
-      [-25, 65],
-      [-20, 60],
-    ],
+    accessVia: "chemical-apron", // No separate driveway through the front lawn.
     rows: [{ from: [-34, 43], to: [-15, 62], angle: Math.PI * 0.75 }],
   },
   {
@@ -487,7 +484,7 @@ export const pedestrianLinks = [
   },
   {
     id: "west-front-south",
-    covered: true,
+    covered: false,
     width: 2.65,
     points: [
       [-40, 18],
@@ -593,7 +590,25 @@ export const plazas = [
       [-44, -61],
     ],
   },
-  { id: "gear-plaza", polygon: circle(-9, 73, 8.5, 48) },
+  {
+    id: "gear-plaza",
+    polygon: circle(en14Garden.x, en14Garden.z, en14Garden.radius, 48),
+  },
+  {
+    id: "chemical-apron",
+    clearBuildings: true,
+    polygon: [
+      [-35, 38],
+      [-8, 50],
+      [0, 59],
+      [63, 59],
+      [63, 76],
+      [24, 76],
+      [12, 81],
+      [-18, 82],
+      [-31, 65],
+    ],
+  },
 ];
 export function buildingFootprints() {
   return [...buildings, ...auxiliaries].map((b) => ({
@@ -626,18 +641,48 @@ export function makeSiteLayout() {
       ...roundabouts.map((r) => [circle(...r.center, r.innerRadius, 48)]),
     ),
     driveways = [
-      ...parkingAreas.map((p) => {
-        const geometry = stroke(p.entry, p.kind === "car" ? 4 : 2.4);
+      (() => {
+        // Chemical Engineering access is east of the gear garden, per user photos.
+        // Flared mouth joins the public road; the inner end opens onto the court.
+        const geometry = clip.union(
+          stroke(
+            [
+              [34, 98],
+              [33, 88],
+              [29, 75],
+            ],
+            5.8,
+          ),
+          polygon([
+            [28.5, 98],
+            [39, 98],
+            [36, 92],
+            [35.9, 87],
+            [30.1, 87],
+            [30, 92],
+          ]),
+        );
         return {
-          id: p.id,
-          surface: p.surface,
+          id: "chemical-entrance",
+          surface: "pavers",
           geometry,
-          pavingGeometry:
-            p.surface === "pavers"
-              ? clip.difference(geometry, roadSurface)
-              : [],
+          pavingGeometry: clip.difference(geometry, roadSurface),
         };
-      }),
+      })(),
+      ...parkingAreas
+        .filter((p) => p.entry)
+        .map((p) => {
+          const geometry = stroke(p.entry, p.kind === "car" ? 4 : 2.4);
+          return {
+            id: p.id,
+            surface: p.surface,
+            geometry,
+            pavingGeometry:
+              p.surface === "pavers"
+                ? clip.difference(geometry, roadSurface)
+                : [],
+          };
+        }),
       (() => {
         const geometry = clip.union(
           stroke(

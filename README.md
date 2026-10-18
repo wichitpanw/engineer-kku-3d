@@ -30,6 +30,7 @@ Open http://localhost:8089/. No package installation is needed for the app. Thre
 - `src/campus-data.js`: registry, identities, multi-part footprints, local/metre geographic transforms, evidence and status. Reference origin: EN16 Maps pin, +X east / -Z north.
 - `src/campus-buildings.js`: independent building models, material batches, near/far LOD and selection outline. Selected buildings always show their detailed geometry.
 - `src/model.js` / `src/entrance.js`: the existing EN16 facade, open hall, cylinders, bridge, broad stairs, landing and rails.
+- `src/en14-building.js` / `src/en14-layout.js`: EN14 วิศวกรรมเคมี สองปีกหักมุม ตะแกรง หน้าจั่ว สวนเฟือง อาคารปฏิบัติการด้านขวาและด้านหลัง; ภาพผู้ใช้ 6 ภาพ พร้อมกล้องเฉพาะพื้นที่.
 - `src/en17-building.js`: EN17 อาคารปฏิบัติการวิศวกรรมอุตสาหการ (Workshop) หลังคารับแสง ส่วนต่อด้านใต้ และทางเข้า; ภาพ/ข้อจำกัดใน `research/en17-audit.md`.
 - `src/cb-building.js`: EN09 สองปีก โครงเหล็ก และโถงบันได; ภาพอ้างอิงใน `src/cb-photos.js`.
 - `src/east-engineering.js`: EN04–EN11 และลานกลาง พร้อมโมดูลหลังคาและต้นไม้เฉพาะพื้นที่.

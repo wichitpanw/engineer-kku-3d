@@ -1,3 +1,4 @@
+import { en14Parts } from "./en14-layout.js";
 import { en17FlatParts, en17Garage, en17EastWing } from "./en17-layout.js";
 // Shared campus registry. Metres, +X east, -Z north; origin is EN16.
 // Footprints traced from the supplied enmap sheets and the inspected Maps aerial.
@@ -214,17 +215,18 @@ export const buildings = [
     "วิศวกรรมสิ่งแวดล้อม",
     "Environmental Engineering",
     "south",
-    [part(99, 54, 100, 15, 12), part(113, 71, 20, 20, 10)],
+    [part(106.5, 54, 85, 15, 12), part(113, 71, 20, 20, 10)],
     { aliases: ["environmental", "envi"], phase: 4 },
   ),
-  base(
-    "EN14",
-    "วิศวกรรมเคมี",
-    "Chemical Engineering",
-    "south",
-    [part(-17, 34, 44, 14, 10, "gable", -0.78), part(25, 52, 40, 15, 10)],
-    { aliases: ["chemical", "เคมี"], phase: 4 },
-  ),
+  base("EN14", "วิศวกรรมเคมี", "Chemical Engineering", "south", en14Parts, {
+    aliases: ["chemical", "เคมี", "ภาควิชาวิศวกรรมเคมี"],
+    phase: 4,
+    status: "detail",
+    confidence:
+      "รูปทรงสองปีกและหลังคาเทียบภาพดาวเทียม; ตะแกรง หน้าจั่ว สวนเฟือง และด้านหลังตามภาพผู้ใช้ 6 ภาพ; ผู้ใช้ยืนยันอาคารปฏิบัติการเตี้ยรวม EN14; ระยะและความสูงประมาณ",
+    capture: "ภาพจากผู้ใช้ / Street View 2019 / ภาพมุมสูงไม่ระบุวันที่",
+    sources: ["enmap1", "maps-aerial", "user-chemical"],
+  }),
   base(
     "EN15",
     "ห้องสมุดเก่า",
@@ -397,6 +399,10 @@ export const sourceCatalog = {
   "en11-old": {
     label: "Google Street View · ตึกเก่าเลข 11 · พ.ค. 2019",
     url: "https://www.google.com/maps/@?api=1&map_action=pano&pano=fzhghcCrr2CqGA9v39-eIQ&heading=126.68&pitch=0",
+  },
+  "user-chemical": {
+    label:
+      "ภาพจากผู้ใช้ 6 ภาพ: ผังหลังคา หน้าเคมี ลานจอด อาคารปฏิบัติการ และด้านหลัง; ผู้ใช้ยืนยันอาคารเตี้ยเป็น EN14",
   },
   "user-east": {
     label:

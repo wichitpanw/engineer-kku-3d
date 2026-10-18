@@ -1,3 +1,4 @@
+import { createEN14 } from "./en14-building.js";
 import * as THREE from "three";
 import { createCB } from "./cb-building.js";
 import { createEN17 } from "./en17-building.js";
@@ -344,6 +345,7 @@ export function createCampusBuildings(scene, pien) {
     ]) {
       const level = new THREE.Group();
       if (b.id === "EN18") anniversary(level, detail);
+      else if (b.id === "EN14") createEN14(level, detail);
       else if (b.id === "EN09") createCB(level, detail);
       else if (b.id === "EN17") {
         createEN17(level, detail);

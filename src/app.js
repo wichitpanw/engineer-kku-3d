@@ -1,3 +1,4 @@
+import { en14Photos } from "./en14-photos.js";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createPienvichit, createEnvironment } from "./model.js";
@@ -173,6 +174,10 @@ async function start() {
   });
   function focusBuilding(b, side = "front") {
     if (!b?.bounds) return;
+    if (b.id === "EN14" && side === "front") {
+      fly([1, 6.4, 96], [1, 6, 52], 84);
+      return;
+    }
     if (b.id === "EN09" && side === "front") {
       fly([232, 10, -186], [205, 7, -128], 54);
       return;
@@ -212,15 +217,17 @@ async function start() {
   let currentPhotos = mapsPhotos;
   function references(b) {
     currentPhotos =
-      b?.id === "EN16"
-        ? [...pienPhotos, ...mapsPhotos]
-        : ["EN04", "EN11"].includes(b?.id)
-          ? [...eastPhotos, ...mapsPhotos]
-          : b?.id === "EN17"
-            ? [...en17Photos, ...mapsPhotos]
-            : b?.id === "EN09"
-              ? [...cbPhotos, ...mapsPhotos]
-              : mapsPhotos;
+      b?.id === "EN14"
+        ? [...en14Photos, ...mapsPhotos]
+        : b?.id === "EN16"
+          ? [...pienPhotos, ...mapsPhotos]
+          : ["EN04", "EN11"].includes(b?.id)
+            ? [...eastPhotos, ...mapsPhotos]
+            : b?.id === "EN17"
+              ? [...en17Photos, ...mapsPhotos]
+              : b?.id === "EN09"
+                ? [...cbPhotos, ...mapsPhotos]
+                : mapsPhotos;
     $("#referenceCount").textContent = String(currentPhotos.length).padStart(
       2,
       "0",
@@ -348,6 +355,7 @@ async function start() {
       `<div class="selected-heading"><span class="eyebrow">${b.id} / ${escapeHTML(b.en)}</span><button id="clearSelection" aria-label="กลับภาพรวมทั้งคณะ">×</button></div><h2>${escapeHTML(b.name)}</h2><span class="status-badge ${b.status}">${STATUS[b.status]}</span>${b.usage ? `<p class="building-usage">${escapeHTML(b.usage)}</p>` : ""}<p class="evidence-note">${escapeHTML(b.confidence)}</p>`;
     $("#clearSelection").addEventListener("click", () => view("overview"));
     $("#buildingViews").hidden = false;
+    $$("[data-en14]").forEach((e) => (e.hidden = id !== "EN14"));
     $$("[data-en17]").forEach((e) => (e.hidden = id !== "EN17"));
     $$("[data-cb]").forEach((e) => (e.hidden = id !== "EN09"));
     $$("[data-pien]").forEach((e) => (e.hidden = id !== "EN16"));
@@ -442,6 +450,17 @@ async function start() {
         "en17-entry": [[185, 2.6, -22], [192, 4, -59], 62],
         "en17-roof": [[242, 100, -32], [200, 0, -75], 48],
         "en17-north": [[169, 2.2, -105.8], [207, 3.1, -105.8], 66],
+      };
+      fly(...presets[name]);
+    } else if (
+      selected?.id === "EN14" &&
+      ["chem-front", "chem-rear", "chem-site", "chem-entry"].includes(name)
+    ) {
+      const presets = {
+        "chem-front": [[1, 6.4, 96], [1, 6, 52], 84],
+        "chem-entry": [[42, 5.2, 112], [21, 3.5, 71], 67],
+        "chem-rear": [[0, 4.3, 31], [16, 5.2, 47], 78],
+        "chem-site": [[-30, 130, 115], [8, 0, 43], 47],
       };
       fly(...presets[name]);
     } else if (selected) focusBuilding(selected, name);

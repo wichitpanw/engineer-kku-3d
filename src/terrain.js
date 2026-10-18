@@ -447,7 +447,11 @@ export function createTerrain(scene) {
             probe = [rectangle(...middle, 0.5, 0.5)];
           const inOpenCourt = layout.paving.some(
             (p) =>
-              ["east-courtyard", "en17-entrance-court"].includes(p.id) &&
+              [
+                "east-courtyard",
+                "en17-entrance-court",
+                "chemical-apron",
+              ].includes(p.id) &&
               area(clip.intersection(probe, p.geometry)) > 0.01,
           );
           if (inOpenCourt) {
@@ -678,32 +682,17 @@ export function createTerrain(scene) {
     );
     cylinder(details, r.center[0], 0.6, r.center[1], 2.2, 1, M.leaves[1], 16);
   }
-  // The small landscaped circle is beside the lane, not a vehicle roundabout.
-  cylinder(root, -9, 0.1, 73, 8.1, 0.18, M.grass2, 64);
-  cylinder(root, -9, 0.25, 73, 2.2, 0.45, M.stone, 32);
-  const gear = mesh(
-    details,
-    new THREE.TorusGeometry(1.4, 0.18, 6, 28),
-    M.metal,
-    -9,
-    2,
-    73,
+  // Rear Chemical Engineering lawn, bounded by the connected wings and office.
+  surface(
+    clip.difference(
+      [rectangle(0, 29, 26, 22)],
+      layout.occupied,
+      drivingAndParking,
+    ),
+    0.055,
+    M.grass2,
   );
-  gear.rotation.x = 0.2;
-  for (let i = 0; i < 12; i++) {
-    const a = (i / 12) * Math.PI * 2,
-      t = box(
-        details,
-        -9 + Math.cos(a) * 1.6,
-        2 + Math.sin(a) * 1.6,
-        73,
-        0.4,
-        0.3,
-        0.3,
-        M.metal,
-      );
-    t.rotation.z = a;
-  }
+  // EN14 garden and half gear are owned by the dedicated building model.
   // Planting is restricted to traced green courts/strips, and excludes all hard
   // surfaces plus a canopy clearance. This prevents trees growing through cars.
   const greenPolygons = [
@@ -829,6 +818,18 @@ export function createTerrain(scene) {
   // Planted island in front of the department sign, visible in the close entrance photo.
   box(details, 194, 0.065, -45, 15, 0.13, 4, M.soil);
   hedge(details, [187, -43.1], [201, -43.1], 0.55);
+  // Mature trees frame the Chemical Engineering driveway without blocking it.
+  for (const [x, z, h] of [
+    [19, 85, 8],
+    [46, 85, 9],
+    [53, 78, 8],
+  ]) {
+    if (
+      !contains([x, z], layout.occupied) &&
+      !contains([x, z], drivingAndParking)
+    )
+      tree(details, x, z, h);
+  }
   // Lamps follow the verified public lanes and remain off their surfaces.
   for (const [x, z] of [
     [-61, -120],
