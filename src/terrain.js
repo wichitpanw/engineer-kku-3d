@@ -779,7 +779,13 @@ export function createTerrain(scene) {
       const inCBWood = xx > 113 && xx < 164 && zz > -168 && zz < -101;
       // EN13 has explicit photo-based planting with crown clearance.
       const inEN13Garden = xx > 60 && xx < 180 && zz > 40 && zz < 94;
-      if (!inCBWood && !inEN13Garden && contains([xx, zz], green) && random() > 0.2)
+      const nearMechanicalRoof = xx > -220 && xx < -100 && zz > -145 && zz < 35 &&
+        layout.footprints.some(f => f.geometry.some(poly => poly[0].some((a, i, ring) => {
+          const b = ring[(i+1)%ring.length], dx=b[0]-a[0], dz=b[1]-a[1];
+          const t=Math.max(0,Math.min(1,((xx-a[0])*dx+(zz-a[1])*dz)/(dx*dx+dz*dz || 1)));
+          return Math.hypot(xx-a[0]-t*dx,zz-a[1]-t*dz)<5;
+        })));
+      if (!inCBWood && !inEN13Garden && !(xx > -214 && xx < -188 && zz > -58 && zz < -23) && !nearMechanicalRoof && contains([xx, zz], green) && random() > 0.2)
         tree(details, xx, zz, 6 + random() * 4);
     }
   // Dense woodland west of CB, traced from the supplied aerial. Keep trunks

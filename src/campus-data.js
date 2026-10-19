@@ -1,3 +1,4 @@
+import { mechanicalLabParts, mechanicalTeachingParts } from "./mechanical-layout.js";
 import { en13Parts } from "./en13-layout.js";
 import { en14Parts } from "./en14-layout.js";
 import { en17FlatParts, en17Garage, en17EastWing } from "./en17-layout.js";
@@ -116,8 +117,8 @@ export const buildings = [
     "ปฏิบัติการวิศวกรรมเครื่องกล",
     "Mechanical Engineering Laboratories",
     "west",
-    [part(-150, -84, 69, 54, 8, "sheds", -0.48)],
-    { phase: 5 },
+    mechanicalLabParts,
+    { phase: 5, confidence: "หลังคาโค้งสี่ช่วงและแนวหมุนเทียบ Google Earth; หน้าต่างสองชั้น ประตูม้วนและแอร์ฝั่งถนนตามภาพผู้ใช้; ระยะประมาณ", capture: "ภาพดาวเทียมผู้ใช้ 19 ต.ค. 2026" },
   ),
   base(
     "EN08",
@@ -166,12 +167,8 @@ export const buildings = [
     "วิศวกรรมเครื่องกล",
     "Mechanical Engineering",
     "west",
-    [
-      part(-171, -30, 20, 35, 12, "gable", -0.45),
-      part(-154, -18, 28, 12, 12, "gable", -0.45),
-      part(-187, -46, 14, 25, 9, "gable", -0.45),
-    ],
-    { phase: 5 },
+    mechanicalTeachingParts,
+    { phase: 5, confidence: "อาคารสามชั้น ระเบียงชมพู ป้ายหิน สวนและชิ้นงานเครื่องกลอ้างอิงภาพผู้ใช้ 8 ภาพ; ผังและทิศทางเทียบดาวเทียม ระยะและการแบ่งรหัสอาคารย่อยยังประมาณ", mapPin: { latitude: 16.473071798306023, longitude: 102.82212596202064 } },
   ),
   base(
     "EN11",

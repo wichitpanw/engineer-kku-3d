@@ -4,8 +4,8 @@ import { createSceneTools } from "./scene-tools.js?v=20261019-tools";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createPienvichit, createEnvironment } from "./model.js";
-import { createTerrain } from "./terrain.js?v=20261019-tools2";
-import { createCampusBuildings } from "./campus-buildings.js?v=20261019-tools";
+import { createTerrain } from "./terrain.js?v=mechanical-garage-1";
+import { createCampusBuildings } from "./campus-buildings.js?v=mechanical-garage-1";
 import { buildings, STATUS, CAMPUS_BOUNDS } from "./campus-data.js";
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)];
@@ -396,6 +396,7 @@ async function start() {
     $$("[data-east]").forEach(
       (e) => (e.hidden = !["EN04", "EN11"].includes(id)),
     );
+    $$("[data-mechanical]").forEach(e => e.hidden = !["EN07", "EN10"].includes(id));
     $("#miniSelected").textContent = id;
     for (const [key, e] of labelElements)
       e.classList.toggle("selected", key === id);
@@ -433,6 +434,15 @@ async function start() {
         name === "top" ? [30, 0, -35] : allView.target,
         45,
       );
+    } else if (["EN07", "EN10"].includes(selected?.id) && name.startsWith("me-")) {
+      const presets = {
+        "me-garden": [[-233, 5, -14], [-193, 5, -40], 52],
+        "me-front": [[-236, 5, -95], [-202, 4, -76], 55],
+        "me-lab": [[-162, 6, -157], [-130, 4, -121], 58],
+        "me-site": [[-166, 205, 2], [-166, 0, -43], 48],
+        "me-garage": [[-209, 8, 4], [-166, 2.3, 13], 58],
+      };
+      if (presets[name]) fly(...presets[name]);
     } else if (
       selected?.id === "EN16" &&
       ["entrance", "hall", "bridge"].includes(name)

@@ -1,3 +1,4 @@
+import { mechanicalGarage } from "./mechanical-layout.js";
 import { en13Site } from "./en13-layout.js";
 import { en14Garden } from "./en14-layout.js";
 import clip from "../vendor/polygon-clipping/index.js";
@@ -244,11 +245,10 @@ export const roadNetwork = [
     points: [
       [-214, -24],
       [-197, -6],
-      [-176, 4],
+      [-187, -9],
+      [-153, -9],
       [-145, 4],
       [-132, 4],
-      [-132, -24],
-      [-53, -24],
     ],
   },
 ];
@@ -540,6 +540,10 @@ export const pedestrianLinks = [
   },
 ];
 export const plazas = [
+  {
+    id: "mechanical-inner-court", clearBuildings: true,
+    polygon: [[-210,-83],[-173,-98],[-118,-58],[-119,-18],[-165,-10],[-202,-36]],
+  },
   { id: "en13-entry", clearBuildings: true, polygon: rectangle(en13Site.entry.x, en13Site.entry.z, en13Site.entry.w, en13Site.entry.d) },
   {
     id: "en17-entrance-court",
@@ -661,6 +665,12 @@ export function makeSiteLayout() {
       ...roundabouts.map((r) => [circle(...r.center, r.innerRadius, 48)]),
     ),
     driveways = [
+      {
+        id: "mechanical-garage-entry",
+        surface: "pavers",
+        geometry: stroke(mechanicalGarage.entry, mechanicalGarage.aisle),
+        pavingGeometry: clip.difference(stroke(mechanicalGarage.entry, mechanicalGarage.aisle), roadSurface),
+      },
       (() => {
         // Chemical Engineering access is east of the gear garden, per user photos.
         // Flared mouth joins the public road; the inner end opens onto the court.
