@@ -46,12 +46,6 @@ EN09 is the official code; CB is the colloquial name. EN15 is the former library
 
 Dimensions are estimated from photographs and aerial imagery. EN16/EN18, EN04/EN11 and EN09 have bespoke exterior detail; EN17 has a photo-derived wall facing CB. Unseen faces remain preliminary. A `detail` status indicates additional modeling, not a measured or fully surveyed replica. The prototype does not certify building access or real navigation routes.
 
-## ภาพจริงของคุณ
-
-วางรูปใน `assets/building-photos/` ตั้งชื่อตามรหัสอาคาร เช่น `EN14.jpg` ดูชื่อไฟล์และวิธีวางรูปใน [คู่มือรูป](assets/building-photos/README.md)
-แท็บ ภาพจริง ใช้รูปเดียวต่ออาคาร วางไฟล์รหัสตึก เช่น EN14.jpg (หรือ PNG/WebP) ในโฟลเดอร์รูปเดียวกัน ไม่มีรูปแยกตามจุดหรือปุ่มเลื่อนรูป
-แสงสำเร็จรูปอยู่ใน แสงและภาพ; H ซ่อน/คืนหน้าจอ, Alt+P บันทึก PNG
-
 ## ไฟทางเท้าและแสง
 
 เลือกเช้า / เย็น / กลางคืนในแผง แสงและภาพ ไฟหัวเฟืองตามแนวทางเท้าจะสว่างเฉพาะกลางคืน ตำแหน่งและระยะห่างเป็นแบบจำลอง
