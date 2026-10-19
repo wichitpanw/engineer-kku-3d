@@ -3,7 +3,7 @@ export function photosForBuilding(building) {
   if (!building) return [];
   return [
     {
-      file: `assets/building-photos/${building.id}/front.jpg`,
+      file: `assets/building-photos/${building.id}.jpg`,
       title: `${building.id} · ${building.name}`,
       description: "ภาพจริงของอาคาร",
     },

@@ -9,13 +9,33 @@ Interactive Three.js exterior model of the Faculty of Engineering, Khon Kaen Uni
 - สถานะล่าสุด งานค้าง ข้อตกลง และตำแหน่งไฟล์: [CONTEXT.md](CONTEXT.md)
 - การเปลี่ยนแปลงภายหลังการ push ต้อง commit/push เพิ่มตามขั้นตอนปกติ
 
+## ย้ายไปทำงานเครื่องอื่น
+
+ต้องมี Git และ Python 3 จากนั้นใช้:
+
+```powershell
+git clone https://github.com/wichitpanw/engineer-kku-3d.git
+cd engineer-kku-3d
+python -m http.server 8089 --bind 127.0.0.1
+```
+
+เปิด http://localhost:8089/ และอ่าน [CONTEXT.md](CONTEXT.md) เพื่อทำงานต่อจากสถานะล่าสุด
+ถ้าเครื่องใช้คำสั่ง `python3` ให้แทน `python` ในคำสั่งข้างต้น
+
+- ซอร์ส โมเดล CSS, `vendor/`, แผนที่เล็ก และคู่มือรูปอยู่ใน repository ครบ ไม่ต้องติดตั้ง npm dependencies เพื่อเปิดแอป
+- ถ้ามี Node.js/npm อยู่แล้ว ใช้ `npm run dev` แทนคำสั่งเปิดเซิร์ฟเวอร์ได้
+- ภาพอาคารใช้ไฟล์ชื่อรหัส เช่น `assets/building-photos/EN14.jpg` อาคารละรูปเดียว ดู [คู่มือชื่อรูป](assets/building-photos/README.md)
+- ตอนส่งมอบนี้โฟลเดอร์ภาพยังไม่มีภาพอาคารใหม่ ผู้ใช้สามารถวางรูปเพิ่มแล้ว commit/push ภายหลัง
+- แคช `node_modules/` เป็นไฟล์เฉพาะเครื่อง ไม่จำเป็นสำหรับย้ายงาน
+- ไม่ต้องใช้สำเนาโปรเจคต้นทางที่เคลียร์ไปแล้ว
+
 ## Run
 
 ```powershell
 npm run dev
 ```
 
-Open http://localhost:8089/. No package installation is needed for the app. Three.js/OrbitControls are vendored from the user-selected reference project, cloned into `reference-home/` at `86f8aa462e8c6fa2ba30f2b6fe99d5810b374e88`.
+Open http://localhost:8089/. No package installation is needed for the app. Three.js/OrbitControls are included locally in `vendor/`; the app has no dependency on the former reference checkout.
 
 ## Explore
 
@@ -55,8 +75,8 @@ Dimensions are estimated from photographs and aerial imagery. EN16/EN18, EN04/EN
 
 ## ภาพจริงของคุณ
 
-วางรูปใน `assets/building-photos/` แยกตามรหัสอาคาร ดูชื่อไฟล์และวิธีวางรูปใน [คู่มือรูป](assets/building-photos/README.md)
-แท็บ ภาพจริง ใช้รูปเดียวต่ออาคาร วางไฟล์ front.jpg (หรือ PNG/WebP) ในโฟลเดอร์รหัสตึก ไม่มีรูปแยกตามจุดหรือปุ่มเลื่อนรูป
+วางรูปใน `assets/building-photos/` ตั้งชื่อตามรหัสอาคาร เช่น `EN14.jpg` ดูชื่อไฟล์และวิธีวางรูปใน [คู่มือรูป](assets/building-photos/README.md)
+แท็บ ภาพจริง ใช้รูปเดียวต่ออาคาร วางไฟล์รหัสตึก เช่น EN14.jpg (หรือ PNG/WebP) ในโฟลเดอร์รูปเดียวกัน ไม่มีรูปแยกตามจุดหรือปุ่มเลื่อนรูป
 แสงสำเร็จรูปอยู่ใน แสงและภาพ; H ซ่อน/คืนหน้าจอ, Alt+P บันทึก PNG
 
 ## ไฟทางเท้าและแสง

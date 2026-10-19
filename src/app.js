@@ -1,5 +1,5 @@
 import { campusPoints } from "./campus-points.js";
-import { photosForBuilding } from "./building-photos.js?v=one-photo";
+import { photosForBuilding } from "./building-photos.js?v=building-name";
 import { createSceneTools } from "./scene-tools.js?v=20261019-tools";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
