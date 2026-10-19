@@ -1,3 +1,4 @@
+import { agriculturalMainParts, agriculturalLabParts } from "./agricultural-layout.js";
 import { mechanicalLabParts, mechanicalTeachingParts } from "./mechanical-layout.js";
 import { en13Parts } from "./en13-layout.js";
 import { en14Parts } from "./en14-layout.js";
@@ -96,8 +97,8 @@ export const buildings = [
     "วิศวกรรมเกษตร",
     "Agricultural Engineering",
     "west",
-    [part(-85, -75, 33, 78, 11), part(-85, -115, 38, 11, 8)],
-    { phase: 5 },
+    agriculturalMainParts,
+    { phase: 5, status: "detail", capture: "ภาพดาวเทียมผู้ใช้ / Google Maps 10 ภาพ มิ.ย. 2019 / Street View พ.ค. 2019", confidence: "อาคารสองชั้น ช่องเปิดกลางอาคาร หลังคาสีอ่อน แผงบังแดดและซุ้มแดงเทียบภาพจริง; ความสูงและระยะยังประมาณ", sources: ["maps-aerial", "agri-photos"] },
   ),
   base(
     "EN06",
@@ -205,8 +206,8 @@ export const buildings = [
     "ปฏิบัติการวิศวกรรมเกษตร",
     "Agricultural Engineering Laboratories",
     "west",
-    [part(-108, -7, 32, 22, 9, "sheds")],
-    { phase: 5 },
+    agriculturalLabParts,
+    { phase: 5, status: "detail", capture: "ภาพดาวเทียมผู้ใช้ / Google Maps มิ.ย. 2019 / Street View พ.ค. 2019", confidence: "ผู้ใช้ยืนยัน EN12 เป็นภาคเกษตร; ปีกปฏิบัติการด้านใต้ ผนังอิฐเลข 12 และโรงเรือนเทียบภาพจริง; ขนาดส่วนต่อและความสูงประมาณ", sources: ["maps-aerial", "agri-photos"] },
   ),
   base(
     "EN13",
@@ -367,6 +368,7 @@ export const auxiliaries = [
   },
 ];
 export const sourceCatalog = {
+  "agri-photos": { label: "Google Maps · วิศวกรรมเกษตร · ภาพ มิ.ย. 2019 และ Street View พ.ค. 2019", url: "https://www.google.com/maps?cid=15457346161125191344" },
   "user-en17-name": {
     label:
       "ชื่อตามป้าย อาคารปฏิบัติการวิศวกรรมอุตสาหการ · ผู้ใช้ยืนยัน 18 ต.ค. 2026",

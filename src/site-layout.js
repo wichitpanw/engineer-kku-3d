@@ -540,6 +540,11 @@ export const pedestrianLinks = [
   },
 ];
 export const plazas = [
+  { id: "agri-east-entrance", clearBuildings: true, polygon: rectangle(-62.5,-84,13,5.2) },
+  { id: "agri-north-apron", clearBuildings: true, polygon: rectangle(-85,-130,39,10) },
+  { id: "agri-lab-access", clearBuildings: true, polygon: rectangle(-63,-59,15,6) },
+  { id: "agri-lab-front", clearBuildings: true, polygon: rectangle(-62.5,-42,12,6) },
+  { id: "agri-south-apron", clearBuildings: true, polygon: rectangle(-97,-16,40,18) },
   {
     id: "mechanical-inner-court", clearBuildings: true,
     polygon: [[-210,-83],[-173,-98],[-118,-58],[-119,-18],[-165,-10],[-202,-36]],

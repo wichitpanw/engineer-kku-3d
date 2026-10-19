@@ -4,8 +4,8 @@ import { createSceneTools } from "./scene-tools.js?v=20261019-tools";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createPienvichit, createEnvironment } from "./model.js";
-import { createTerrain } from "./terrain.js?v=mechanical-garage-1";
-import { createCampusBuildings } from "./campus-buildings.js?v=mechanical-garage-1";
+import { createTerrain } from "./terrain.js?v=agricultural-2";
+import { createCampusBuildings } from "./campus-buildings.js?v=agricultural-2";
 import { buildings, STATUS, CAMPUS_BOUNDS } from "./campus-data.js";
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)];
@@ -396,6 +396,7 @@ async function start() {
     $$("[data-east]").forEach(
       (e) => (e.hidden = !["EN04", "EN11"].includes(id)),
     );
+    $$("[data-agricultural]").forEach(e => e.hidden = !["EN05", "EN12"].includes(id));
     $$("[data-mechanical]").forEach(e => e.hidden = !["EN07", "EN10"].includes(id));
     $("#miniSelected").textContent = id;
     for (const [key, e] of labelElements)
@@ -434,6 +435,14 @@ async function start() {
         name === "top" ? [30, 0, -35] : allView.target,
         45,
       );
+    } else if (["EN05", "EN12"].includes(selected?.id) && name.startsWith("ag-")) {
+      const presets = {
+        "ag-entry": [[-39, 4.8, -96], [-67, 3.2, -94], 62],
+        "ag-lab": [[-45, 5.5, -34], [-75, 3.6, -42], 56],
+        "ag-court": [[-118, 27, -91], [-92, 1, -98], 52],
+        "ag-site": [[-85, 195, -69], [-85, 0, -70], 48],
+      };
+      if (presets[name]) fly(...presets[name]);
     } else if (["EN07", "EN10"].includes(selected?.id) && name.startsWith("me-")) {
       const presets = {
         "me-garden": [[-233, 5, -14], [-193, 5, -40], 52],

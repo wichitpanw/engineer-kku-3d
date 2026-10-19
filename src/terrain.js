@@ -785,7 +785,7 @@ export function createTerrain(scene) {
           const t=Math.max(0,Math.min(1,((xx-a[0])*dx+(zz-a[1])*dz)/(dx*dx+dz*dz || 1)));
           return Math.hypot(xx-a[0]-t*dx,zz-a[1]-t*dz)<5;
         })));
-      if (!inCBWood && !inEN13Garden && !(xx > -214 && xx < -188 && zz > -58 && zz < -23) && !nearMechanicalRoof && contains([xx, zz], green) && random() > 0.2)
+      if (!(xx > -112 && xx < -56 && zz > -145 && zz < -15) && !inCBWood && !inEN13Garden && !(xx > -214 && xx < -188 && zz > -58 && zz < -23) && !nearMechanicalRoof && contains([xx, zz], green) && random() > 0.2)
         tree(details, xx, zz, 6 + random() * 4);
     }
   // Dense woodland west of CB, traced from the supplied aerial. Keep trunks
