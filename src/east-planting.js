@@ -1,6 +1,9 @@
 // Individual trunks placed from the May 2019 courtyard panorama and aerial.
 // Roots are explicit, not randomly scattered; canopy reach remains approximate.
 export const eastPlanting = [
+  ...[196, 207, 218, 240, 249].map((x, i) => ({
+    kind: "shade-tree", x, z: 83.5 + (i % 2), h: 10 + (i % 3),
+  })),
   { kind: "palm", x: 209, z: 14.2, h: 7.1 },
   { kind: "palm", x: 210.1, z: 15.1, h: 6.4 },
   { kind: "fan-cluster", x: 219, z: 15, h: 4.3 },

@@ -261,6 +261,18 @@ export const roundabouts = [
 ];
 export const parkingAreas = [
   {
+    id: "PC-EE-SIDE",
+    entryWidth: 6,
+    kind: "car",
+    surface: "pavers",
+    bayWidth: 2.5,
+    bayDepth: 5,
+    spacing: 2.5,
+    polygon: rectangle(222, 73.5, 57, 13.6),
+    entry: [[184, 70], [195, 70], [249, 70]],
+    rows: [{ from: [195.75, 77.5], to: [248.25, 77.5], angle: Math.PI }],
+  },
+  {
     id: "MC-CPE",
     kind: "motorcycle",
     surface: "pavers",
@@ -672,7 +684,7 @@ export function makeSiteLayout() {
       ...parkingAreas
         .filter((p) => p.entry)
         .map((p) => {
-          const geometry = stroke(p.entry, p.kind === "car" ? 4 : 2.4);
+          const geometry = stroke(p.entry, p.entryWidth || (p.kind === "car" ? 4 : 2.4));
           return {
             id: p.id,
             surface: p.surface,

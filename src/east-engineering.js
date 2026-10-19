@@ -381,7 +381,18 @@ export function createElectricalOld(root, detail) {
     d = 15,
     h = 6.7;
   // Light two-storey panel building. North side has an open upper access balcony.
-  box(p, 0, h / 2, 1, w - 0.8, h, d - 3.2, M.white);
+  // Ground-floor through passage toward the south-side car park.
+  const passageX = 14.3, passageWidth = 4.7, passageHeight = 3.15;
+  const leftEdge = passageX - passageWidth / 2;
+  const rightEdge = passageX + passageWidth / 2;
+  const halfWall = (w - 0.8) / 2;
+  box(p, (leftEdge - halfWall) / 2, h / 2, 1,
+    leftEdge + halfWall, h, d - 3.2, M.white);
+  box(p, (rightEdge + halfWall) / 2, h / 2, 1,
+    halfWall - rightEdge, h, d - 3.2, M.white);
+  box(p, passageX, (h + passageHeight) / 2, 1,
+    passageWidth, h - passageHeight, d - 3.2, M.white);
+  box(p, passageX, 0.20, 1.5, passageWidth, 0.12, 29, M.floor);
   for (const y of [0.25, 3.45, 6.7])
     box(p, 0, y, -0.3, w, 0.18, d - 0.2, M.trim);
   for (const x of [-29.7, 29.7])
@@ -419,11 +430,12 @@ export function createElectricalOld(root, detail) {
     north.position.set(x, 0, -4.96);
     north.rotation.y = Math.PI;
     p.add(north);
-    window(north, 0, 1.75, 0, 3.65, 2.5);
+    const inPassage = Math.abs(x - passageX) < passageWidth / 2;
+    if (!inPassage) window(north, 0, 1.75, 0, 3.65, 2.5);
     window(north, 0, 5.0, 0, 3.65, 2.5);
     box(p, x, 5.1, -7.05, 0.09, 3.2, 0.09, M.frame);
     aircon(p, x, 4.5, 7.05);
-    window(p, x, 1.75, 7.02, 3.15, 1.7);
+    if (!inPassage) window(p, x, 1.75, 7.02, 3.15, 1.7);
     window(p, x, 5.02, 7.02, 3.15, 1.7);
   }
   for (const y of [3.62, 4.4, 4.55])
@@ -467,9 +479,52 @@ export function createElectricalOld(root, detail) {
       box(p, x + dx, 0.4, -8.2, 0.07, 0.8, 0.5, M.frame);
   }
 }
+// Side parking south of the old EN11 block, from user aerial / Street View.
+// Dimensions are approximate; the west mouth remains open to the campus road.
+function electricalSideParking(root) {
+  const c = eastCanopies.electricalParking;
+  const p = new THREE.Group();
+  p.name = "EN11 south side car park";
+  p.position.set(c.x, 0, c.z);
+  root.add(p);
+  const roof = box(p, 0, 3.18, 0, c.w, 0.12, c.d, M.roof);
+  roof.rotation.x = -0.10;
+  // Red steel frames and diagonal knee braces under a shallow mono-pitch roof.
+  for (let x = -28; x <= 28; x += 7) {
+    for (const z of [-2.7, 2.7]) {
+      const h = 3.12 + z * 0.10;
+      box(p, x, h / 2, z, 0.11, h, 0.11, M.red);
+      box(p, x, 0.14, z, 0.38, 0.24, 0.38, M.floor);
+      beam(p, [x, h - 0.85, z], [x, 3.08, z - Math.sign(z) * 1.25], 0.065, M.red);
+    }
+    beam(p, [x, 2.84, -3.15], [x, 3.47, 3.15], 0.10, M.red);
+  }
+  for (const z of [-2.9, 0, 2.9])
+    box(p, 0, 3.1 + z * 0.10, z, c.w, 0.08, 0.08, M.red);
+  for (let x = -28.5; x < 29; x += 0.75) {
+    const rib = box(p, x, 3.26, 0, 0.025, 0.025, c.d, M.trim);
+    rib.rotation.x = -0.10;
+  }
+  // Low covered walkway follows the south facade, separate from the car roof.
+  const walk = eastCanopies.oldSouth;
+  box(root, walk.x, 0.11, walk.z, walk.w, 0.16, walk.d, M.tan);
+  box(root, walk.x, 2.86, walk.z, walk.w + 0.3, 0.12, walk.d + 0.3, M.trim);
+  for (let x = 192; x <= 250; x += 4.8)
+    box(root, x, 1.43, 63, 0.10, 2.86, 0.10, M.blue);
+  // Short return along the street stops before the driveway mouth.
+  box(root, 189.8, 2.86, 65, 2.25, 0.12, 3, M.trim);
+  box(root, 189.8, 1.43, 66.2, 0.10, 2.86, 0.10, M.blue);
+  for (const [x, z, w, d] of [[208, 65.6, 34, 3.1], [222, 83, 58, 3.5]])
+    box(root, x, 0.09, z, w, 0.08, d, M.soil);
+  // Small drain beside the access, clear of the driving lane.
+  box(root, 189, 0.08, 73.1, 1.7, 0.07, 0.55, M.dark);
+  for (let x = 188.2; x < 189.9; x += 0.14)
+    box(root, x, 0.13, 73.1, 0.04, 0.035, 0.5, M.frame);
+}
 export function createEastCourtyard(scene) {
   const root = new THREE.Group();
   root.name = "EN04-EN11 permanent courtyard";
+  electricalSideParking(root);
   scene.add(root);
   // Lawn island occupies the space between the two circulation lanes, as in the aerial.
   box(root, 207, 0.19, 19, 27, 0.25, 12.4, M.trim);

@@ -445,7 +445,7 @@ async function start() {
       fly(...presets[name]);
     } else if (
       ["EN04", "EN11"].includes(selected?.id) &&
-      ["east-court", "ee-entry", "cpe-entry", "ee-old", "east-street"].includes(
+      ["east-court", "ee-entry", "cpe-entry", "ee-old", "ee-parking", "east-street"].includes(
         name,
       )
     ) {
@@ -454,6 +454,7 @@ async function start() {
         "ee-entry": [[219, 3.0, 25], [239, 5.5, 25], 62],
         "cpe-entry": [[210, 3.2, 11], [218, 5.8, -10], 60],
         "ee-old": [[182, 3.2, 43], [207, 3.8, 53], 62],
+        "ee-parking": [[179, 5.5, 72], [226, 2.5, 71], 65],
         "east-street": [[184, 2.7, 58], [184, 2.7, -12], 65],
       };
       fly(...presets[name]);
