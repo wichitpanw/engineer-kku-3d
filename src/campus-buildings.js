@@ -328,7 +328,8 @@ export function createCampusBuildings(scene, pien) {
   const root = new THREE.Group();
   scene.add(root);
   const entries = new Map();
-  let selectedId = null;
+  let selectedId = null,
+    photoMode = false;
   for (const b of buildings) {
     if (!b.bounds) continue;
     if (b.id === "EN16") {
@@ -397,8 +398,12 @@ export function createCampusBuildings(scene, pien) {
     entries,
     services,
     select,
+    setPhotoMode(value) {
+      photoMode = value;
+      outline.visible = !value && !!selectedId;
+    },
     update(camera) {
-      outline.visible = !!selectedId && camera.position.y > 8;
+      outline.visible = !photoMode && !!selectedId && camera.position.y > 8;
       for (const [id, e] of entries)
         if (e.object.isLOD) {
           e.object.autoUpdate = id !== selectedId;

@@ -1474,3 +1474,299 @@ dialog dd {
     max-height: 80vh;
   }
 }
+
+/* Exterior exploration and one-photo viewer. */
+.building-tag {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 180px;
+  min-height: 29px;
+}
+.building-tag b {
+  font-size: 10px;
+  flex: none;
+}
+.building-tag span {
+  font-family: "IBM Plex Sans Thai", sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  max-width: 125px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.point-labels {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+.point-tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 190px;
+  border: 1px solid #cad4bd;
+  background: #fafbf2f2;
+  padding: 5px 10px 5px 5px;
+  border-radius: 5px;
+  box-shadow: 0 3px 12px #263b2920;
+  font-size: 11px;
+}
+.point-tag b {
+  background: #dfe9c9;
+  color: #355b3c;
+  border-radius: 3px;
+  padding: 4px;
+  font-size: 9px;
+}
+.point-tag.selected {
+  border-color: #2f6248;
+  box-shadow: 0 0 0 2px #e9c35c;
+}
+.point-explorer {
+  border-top: 1px solid var(--line);
+  padding: 12px 0;
+}
+.point-explorer label {
+  font-size: 10px;
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+#pointList {
+  display: grid;
+  gap: 4px;
+}
+#pointList button {
+  text-align: left;
+  padding: 8px 10px;
+  background: #edf1e7;
+  border-radius: 4px;
+  font-size: 11px;
+}
+#pointList button[aria-pressed="true"] {
+  background: #315c46;
+  color: #fff;
+}
+#referencePoint {
+  font: inherit;
+  font-size: 12px;
+  width: 100%;
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #f8faf4;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.single-reference {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+#referenceOpen {
+  display: block;
+  width: 100%;
+  padding: 0;
+  background: transparent;
+}
+#referenceOpen:disabled {
+  display: none;
+}
+#referenceImage {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  display: block;
+  background: #edf0e9;
+}
+.single-reference figcaption {
+  padding: 12px;
+  font-size: 12px;
+}
+.single-reference figcaption p {
+  font-size: 11px;
+  line-height: 1.8;
+  color: var(--muted);
+  margin: 7px 0 0;
+}
+.reference-missing {
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px;
+  text-align: center;
+  background: #eef2e8;
+}
+.reference-missing > span {
+  font-size: 28px;
+  color: #8b9e83;
+}
+.reference-missing b {
+  font-size: 12px;
+}
+.reference-missing code {
+  font-size: 10px;
+  overflow-wrap: anywhere;
+  line-height: 1.8;
+}
+.reference-missing small {
+  font-size: 10px;
+  color: var(--muted);
+}
+.reference-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 12px 0;
+  font-size: 11px;
+}
+.reference-navigation button {
+  padding: 8px 18px;
+  border-radius: 4px;
+  background: #e8eee2;
+}
+.reference-reload {
+  background: transparent;
+  text-decoration: underline;
+  font-size: 11px;
+  padding: 5px 0;
+}
+.atmosphere-panel {
+  position: fixed;
+  right: 24px;
+  bottom: 86px;
+  width: 285px;
+  max-height: calc(100dvh - 130px);
+  overflow: auto;
+  padding: 18px;
+  background: var(--paper);
+  border: 1px solid #fff9;
+  border-radius: 8px;
+  z-index: 12;
+  box-shadow: 0 12px 40px #203a3429;
+}
+.atmosphere-panel header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+.atmosphere-panel header button {
+  padding: 3px 9px;
+  border-radius: 4px;
+  background: #e8eee3;
+  font-size: 20px;
+}
+.light-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.light-presets button {
+  padding: 7px 10px;
+  background: #eef2e8;
+  border-radius: 4px;
+  font-size: 11px;
+}
+.light-presets button[aria-pressed="true"] {
+  background: #315c46;
+  color: white;
+}
+.atmosphere-panel label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-top: 16px;
+}
+.atmosphere-panel input[type="range"] {
+  width: 100%;
+  accent-color: #315c46;
+}
+.atmosphere-panel p {
+  font-size: 10px;
+  color: var(--muted);
+}
+.atmosphere-panel #lightingReset {
+  font-size: 11px;
+  padding: 7px 12px;
+  background: #e7eddf;
+  border-radius: 4px;
+  margin-top: 12px;
+}
+.atmosphere-hint {
+  line-height: 1.8;
+}
+.photo-exit {
+  position: fixed;
+  right: 22px;
+  top: 22px;
+  z-index: 30;
+  padding: 10px 15px;
+  background: #fafbf0dd;
+  border-radius: 6px;
+  font-size: 11px;
+}
+.photo-mode #panel,
+.photo-mode #panelToggle,
+.photo-mode .topbar,
+.photo-mode .site-header,
+.photo-mode .building-labels,
+.photo-mode .point-labels,
+.photo-mode .map-tools,
+.photo-mode .minimap,
+.photo-mode footer,
+.photo-mode .attribution,
+.photo-mode .walk-hud,
+.photo-mode .scene-label {
+  visibility: hidden;
+  pointer-events: none;
+}
+[hidden] {
+  display: none !important;
+}
+@media (max-width: 760px) {
+  .atmosphere-panel {
+    right: 12px;
+    bottom: 78px;
+    width: min(285px, calc(100vw - 24px));
+  }
+  .building-tag span {
+    display: none;
+  }
+  .bottom-controls button span {
+    display: none;
+  }
+  .point-tag {
+    font-size: 10px;
+  }
+}
+
+.photo-mode > header {
+  visibility: hidden;
+  pointer-events: none;
+}
+.atmosphere-panel > header {
+  position: static;
+  inset: auto;
+  width: auto;
+  height: auto;
+  padding: 0;
+  transform: none;
+  background: none;
+  box-shadow: none;
+  pointer-events: auto;
+  gap: 12px;
+}

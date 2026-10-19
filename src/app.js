@@ -1,19 +1,12 @@
-import { en14Photos } from "./en14-photos.js";
+import { campusPoints } from "./campus-points.js";
+import { photosForBuilding } from "./building-photos.js?v=one-photo";
+import { createSceneTools } from "./scene-tools.js?v=20261019-tools";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createPienvichit, createEnvironment } from "./model.js";
-import { createTerrain } from "./terrain.js";
-import { createCampusBuildings } from "./campus-buildings.js";
-import {
-  buildings,
-  sourceCatalog,
-  STATUS,
-  CAMPUS_BOUNDS,
-} from "./campus-data.js";
-import { pienPhotos } from "./pien-photos.js";
-import { en17Photos } from "./en17-photos.js";
-import { cbPhotos } from "./cb-photos.js";
-import { eastPhotos } from "./east-photos.js";
+import { createTerrain } from "./terrain.js?v=20261019-tools2";
+import { createCampusBuildings } from "./campus-buildings.js?v=20261019-tools";
+import { buildings, STATUS, CAMPUS_BOUNDS } from "./campus-data.js";
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)];
 const escapeHTML = (s) =>
@@ -95,7 +88,9 @@ async function start() {
   });
   let selected = null,
     walking = false,
-    night = false,
+    photoMode = false,
+    activePoint = null,
+    pointLabelsVisible = true,
     transition = null,
     toastTimer,
     labelsVisible = true,
@@ -133,7 +128,7 @@ async function start() {
     camera.clearViewOffset();
     $("#panelToggle").textContent =
       innerWidth > 760 ? (sidebarOpen ? "‹" : "›") : sidebarOpen ? "×" : "☰";
-    if (innerWidth > 760 && sidebarOpen && !walking)
+    if (innerWidth > 760 && sidebarOpen && !walking && !photoMode)
       camera.setViewOffset(
         innerWidth,
         innerHeight,
@@ -197,71 +192,108 @@ async function start() {
     };
     fly(positions[side] || positions.front, target, 45);
   }
-  const mapsPhotos = [
-    {
-      file: "enmap1.jpg",
-      title: "ผังคณะ · enmap1",
-      description: "แผนผังรหัสอาคารจากผู้ใช้ ไม่ใช้เป็นสัดส่วนรังวัด",
-    },
-    {
-      file: "enmap2.png",
-      title: "กลุ่มอาคาร · enmap2",
-      description: "ผังประกอบอาคารเดิม บางหน้าที่และสิ่งปลูกสร้างเปลี่ยนแล้ว",
-    },
-    {
-      file: "enmap3.jpg",
-      title: "ผังภาพรวม · enmap3",
-      description: "เทียบรหัสกับตำแหน่งจากภาพมุมสูงและคำยืนยันของผู้ใช้",
-    },
-  ];
-  let currentPhotos = mapsPhotos;
-  function references(b) {
-    currentPhotos =
-      b?.id === "EN14"
-        ? [...en14Photos, ...mapsPhotos]
-        : b?.id === "EN16"
-          ? [...pienPhotos, ...mapsPhotos]
-          : ["EN04", "EN11"].includes(b?.id)
-            ? [...eastPhotos, ...mapsPhotos]
-            : b?.id === "EN17"
-              ? [...en17Photos, ...mapsPhotos]
-              : b?.id === "EN09"
-                ? [...cbPhotos, ...mapsPhotos]
-                : mapsPhotos;
-    $("#referenceCount").textContent = String(currentPhotos.length).padStart(
-      2,
-      "0",
+  let currentPhotos = [],
+    photoRequest = 0;
+  function activateTab(name) {
+    $$(".panel-tabs button").forEach((b) =>
+      b.setAttribute("aria-selected", String(b.dataset.tab === name)),
     );
+    $("#buildingTab").hidden = name !== "building";
+    $("#referencesTab").hidden = name !== "references";
+  }
+  function references(b) {
+    currentPhotos = photosForBuilding(b);
     $("#referenceHeading").textContent = b
-      ? `${b.id} · ${b.name} — ภาพและหลักฐาน`
-      : "แผนผังทั้งคณะและหลักฐานตำแหน่ง";
-    $("#referenceGallery").replaceChildren();
-    for (const p of currentPhotos) {
-      const button = document.createElement("button");
-      button.innerHTML = `<img src="${p.file}" alt="${escapeHTML(p.title)}" loading="lazy"><span>${escapeHTML(p.title)} ↗</span>`;
-      button.addEventListener("click", () => {
-        $("#photoImage").src = p.file;
-        $("#photoImage").alt = p.title;
-        $("#photoTitle").textContent = p.title;
-        $("#photoDescription").textContent = p.description;
-        $("#photoDialog").showModal();
-      });
-      $("#referenceGallery").append(button);
+      ? `${b.id} · ${b.name}`
+      : "เลือกอาคารเพื่อดูภาพจริง";
+    $("#referenceCount").textContent = "";
+    showReference();
+  }
+  function showReference() {
+    const request = ++photoRequest;
+    const p = currentPhotos[0],
+      img = $("#referenceImage"),
+      open = $("#referenceOpen");
+    img.hidden = true;
+    img.removeAttribute("src");
+    open.disabled = true;
+    $("#referenceMissing").hidden = false;
+    $("#referenceTitle").textContent = p?.title || "ภาพจริงของอาคาร";
+    $("#referenceDescription").textContent =
+      p?.description || "เลือกรหัสอาคารจากแท็บสำรวจอาคาร";
+    $("#referencePath").textContent = p ? p.file.replace("assets/", "") : "";
+    $("#referenceMissingText").textContent = p
+      ? "ยังไม่มีภาพสำหรับอาคารนี้"
+      : "ยังไม่ได้เลือกอาคาร";
+    if (!p) return;
+    img.alt = p.title;
+    let extension = 0;
+    const base = p.file.replace(/\.(jpg|png|webp)$/i, ""),
+      types = ["jpg", "png", "webp"];
+    function load() {
+      if (request !== photoRequest) return;
+      img.onload = () => {
+        if (request !== photoRequest) return;
+        img.hidden = false;
+        open.disabled = false;
+        $("#referenceMissing").hidden = true;
+      };
+      img.onerror = () => {
+        if (request !== photoRequest) return;
+        if (++extension < types.length) load();
+      };
+      img.src = `${base}.${types[extension]}?v=${Date.now()}`;
     }
-    $("#buildingSources").replaceChildren();
-    for (const id of b?.sources || ["maps-aerial"]) {
-      const source = sourceCatalog[id];
-      if (!source) continue;
-      const e = document.createElement(source.url ? "a" : "p");
-      e.textContent = source.label + (source.url ? " ↗" : "");
-      if (source.url) {
-        e.href = source.url;
-        e.target = "_blank";
-        e.rel = "noreferrer";
-      }
-      $("#buildingSources").append(e);
+    load();
+  }
+  $("#referenceReload").addEventListener("click", () => showReference());
+  $("#referenceOpen").addEventListener("click", () => {
+    const p = currentPhotos[0];
+    if (!p || $("#referenceImage").hidden) return;
+    $("#photoImage").src = $("#referenceImage").src;
+    $("#photoImage").alt = p.title;
+    $("#photoTitle").textContent = p.title;
+    $("#photoDescription").textContent = p.description;
+    $("#photoDialog").showModal();
+  });
+  const pointElements = new Map();
+  function renderPointList() {
+    const points = campusPoints.filter((p) => p.building === selected?.id);
+    $("#pointExplorer").hidden = !points.length;
+    $("#pointList").replaceChildren();
+    for (const p of points) {
+      const button = document.createElement("button");
+      button.textContent = `${p.number} · ${p.title}`;
+      button.setAttribute("aria-pressed", String(activePoint?.id === p.id));
+      button.addEventListener("click", () => selectPoint(p));
+      $("#pointList").append(button);
+      pointElements
+        .get(p.id)
+        ?.classList.toggle("selected", activePoint?.id === p.id);
     }
   }
+  function selectPoint(point) {
+    activePoint = point;
+    if (selected?.id !== point.building) selectBuilding(point.building, false);
+    fly(point.camera, point.target, point.fov);
+    renderPointList();
+    references(selected);
+    activateTab("references");
+    setSidebarOpen(true);
+  }
+  for (const point of campusPoints) {
+    const button = document.createElement("button");
+    button.className = "point-tag";
+    button.innerHTML = `<b>${point.number}</b><span>${escapeHTML(point.title)}</span>`;
+    button.setAttribute("aria-label", `สำรวจ ${point.title}`);
+    button.hidden = true;
+    button.addEventListener("click", () => selectPoint(point));
+    $("#pointLabels").append(button);
+    pointElements.set(point.id, button);
+  }
+  $("#pointLabelsToggle").addEventListener("change", (e) => {
+    pointLabelsVisible = e.target.checked;
+  });
   const labelElements = new Map(),
     miniElements = new Map(),
     NS = "http://www.w3.org/2000/svg";
@@ -274,7 +306,7 @@ async function start() {
   for (const b of buildings) {
     const label = document.createElement("button");
     label.className = "building-tag";
-    label.textContent = b.id;
+    label.innerHTML = `<b>${b.id}</b><span>${escapeHTML(b.name)}</span>`;
     label.title = `${b.id} ${b.name}`;
     label.setAttribute("aria-label", `เลือก ${b.id} ${b.name}`);
     label.addEventListener("click", () => selectBuilding(b.id));
@@ -349,6 +381,8 @@ async function start() {
     const b = buildings.find((b) => b.id === id);
     if (!b) return;
     selected = b;
+    activePoint = null;
+    renderPointList();
     campus.select(id);
     campus.setOtherBuildings($("#contextToggle").checked, id);
     $("#selectedBuilding").innerHTML =
@@ -376,6 +410,8 @@ async function start() {
   }
   function clearSelection() {
     selected = null;
+    activePoint = null;
+    renderPointList();
     $("#buildingSearch").value = "";
     campus.select(null);
     $("#contextToggle").checked = true;
@@ -502,20 +538,6 @@ async function start() {
   }
   $("#zoomIn").addEventListener("click", () => zoom(0.8));
   $("#zoomOut").addEventListener("click", () => zoom(1.25));
-  $("#dayNight").addEventListener("click", () => {
-    night = !night;
-    document.body.classList.toggle("night", night);
-    scene.environmentIntensity = night ? 0.3 : 1;
-    $("#dayNight").setAttribute("aria-pressed", night);
-    $("#dayNight").innerHTML = night ? "☾ กลางคืน" : "☀ กลางวัน";
-    scene.background.set(night ? "#172c40" : "#b4cfdc");
-    scene.fog.color.copy(scene.background);
-    hemi.intensity = night ? 0.5 : 1.9;
-    sun.intensity = night ? 0.15 : 2.8;
-    fill.intensity = night ? 0.2 : 0.45;
-    model.materials.glassDark.emissive.set(night ? "#ad975e" : "#000000");
-    model.materials.glassDark.emissiveIntensity = night ? 0.3 : 0;
-  });
   $("#fullscreenButton").addEventListener("click", () => {
     if (!document.fullscreenElement)
       document.documentElement.requestFullscreen?.();
@@ -706,13 +728,7 @@ async function start() {
     );
   }
   $$(".panel-tabs button").forEach((b) =>
-    b.addEventListener("click", () => {
-      $$(".panel-tabs button").forEach((t) =>
-        t.setAttribute("aria-selected", t === b),
-      );
-      $("#buildingTab").hidden = b.dataset.tab !== "building";
-      $("#referencesTab").hidden = b.dataset.tab !== "references";
-    }),
+    b.addEventListener("click", () => activateTab(b.dataset.tab)),
   );
   $("#panelToggle").addEventListener("click", () =>
     setSidebarOpen(!sidebarOpen),
@@ -750,6 +766,7 @@ async function start() {
       projected.set(b.center[0], b.height + 3, b.center[1]).project(camera);
       const visible =
         !walking &&
+        !photoMode &&
         camera.position.y > 18 &&
         labelsVisible &&
         object.visible &&
@@ -772,14 +789,14 @@ async function start() {
     );
     const occupied = [];
     for (const c of candidates) {
-      if (c.x < 350 && innerWidth > 760) {
+      if (sidebarOpen && c.x < 350 && innerWidth > 760) {
         c.e.hidden = true;
         continue;
       }
       if (
         c.b.id !== selected?.id &&
         occupied.some(
-          (p) => Math.abs(p.x - c.x) < 48 && Math.abs(p.y - c.y) < 24,
+          (p) => Math.abs(p.x - c.x) < 125 && Math.abs(p.y - c.y) < 38,
         )
       ) {
         c.e.hidden = true;
@@ -787,6 +804,43 @@ async function start() {
       }
       c.e.style.transform = `translate(${c.x}px,${c.y}px) translate(-50%,-50%)`;
       occupied.push(c);
+    }
+    const pointRects = [];
+    for (const point of campusPoints) {
+      const e = pointElements.get(point.id);
+      e.hidden = true;
+      if (
+        photoMode ||
+        !pointLabelsVisible ||
+        selected?.id !== point.building ||
+        walking
+      )
+        continue;
+      projected.fromArray(point.anchor).project(camera);
+      const x = (projected.x * 0.5 + 0.5) * innerWidth,
+        y = (-projected.y * 0.5 + 0.5) * innerHeight;
+      if (
+        projected.z > 1 ||
+        projected.z < -1 ||
+        x < 24 ||
+        x > innerWidth - 24 ||
+        y < 100 ||
+        y > innerHeight - 90 ||
+        (sidebarOpen && x < 365 && innerWidth > 760) ||
+        (!$("#atmospherePanel").hidden && x > innerWidth - 320) ||
+        (x > innerWidth - 220 && y > innerHeight - 290)
+      )
+        continue;
+      if (
+        pointRects.some(
+          (p) => Math.abs(p.x - x) < 150 && Math.abs(p.y - y) < 38,
+        ) &&
+        activePoint?.id !== point.id
+      )
+        continue;
+      e.hidden = false;
+      e.style.transform = `translate(${x}px,${y}px) translate(-50%,-50%)`;
+      pointRects.push({ x, y });
     }
     $("#compassNeedle").style.transform =
       `rotate(${(-controls.getAzimuthalAngle() * 180) / Math.PI}deg)`;
@@ -801,6 +855,28 @@ async function start() {
     $("#scaleLabel").textContent =
       `${Math.max(1, Math.round(meters / 5) * 5)} m`;
   }
+  createSceneTools({
+    renderer,
+    scene,
+    camera,
+    sun,
+    hemi,
+    fill,
+    model,
+    terrain,
+    toast,
+    onCapture: (value) => campus.setPhotoMode(value || photoMode),
+    getCaption: () =>
+      selected
+        ? `${selected.id} ${activePoint?.title || selected.name}`
+        : "Faculty Campus",
+    onPhotoMode: (value) => {
+      photoMode = value;
+      campus.setPhotoMode(value);
+      $("#panel").inert = value || !sidebarOpen;
+      resize();
+    },
+  });
   renderList();
   references(null);
   controls.update();
@@ -820,6 +896,7 @@ async function start() {
       if (t === 1) transition = null;
     } else controls.update();
     campus.update(camera);
+    terrain.streetLights.update(camera);
     if (++frameNumber % 3 === 0) overlay();
     renderer.render(scene, camera);
     frames++;

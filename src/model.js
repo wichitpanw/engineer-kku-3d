@@ -118,10 +118,14 @@ export function batch(root) {
     const count = geos.reduce((s, g) => s + g.attributes.position.count, 0),
       positions = new Float32Array(count * 3),
       normals = new Float32Array(count * 3),
-      uvs = new Float32Array(count * 2);
+      uvs = new Float32Array(count * 2),
+      hasAmbient = geos.some((g) => g.attributes.aCampusAmbient),
+      ambient = hasAmbient ? new Float32Array(count).fill(1) : null;
     let offset = 0;
     for (const g of geos) {
       positions.set(g.attributes.position.array, offset * 3);
+      if (ambient && g.attributes.aCampusAmbient)
+        ambient.set(g.attributes.aCampusAmbient.array, offset);
       if (g.attributes.normal)
         normals.set(g.attributes.normal.array, offset * 3);
       if (g.attributes.uv) uvs.set(g.attributes.uv.array, offset * 2);
@@ -132,6 +136,8 @@ export function batch(root) {
     g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     g.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
     g.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
+    if (ambient)
+      g.setAttribute("aCampusAmbient", new THREE.BufferAttribute(ambient, 1));
     g.computeBoundingSphere();
     mesh(g, material, root);
   }

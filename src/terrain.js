@@ -1,3 +1,5 @@
+import { createStreetLights } from "./street-lights.js?v=half-density";
+import { addContactShadow } from "./ambient-detail.js";
 import * as THREE from "three";
 import { buildings } from "./campus-data.js";
 import clip from "../vendor/polygon-clipping/index.js";
@@ -96,10 +98,13 @@ function batch(root) {
   for (const [m, parts] of groups) {
     const count = parts.reduce((n, g) => n + g.attributes.position.count, 0),
       pos = new Float32Array(count * 3),
-      normal = new Float32Array(count * 3);
+      normal = new Float32Array(count * 3),
+      hasUv = parts.some((g) => g.attributes.uv),
+      uv = hasUv ? new Float32Array(count * 2) : null;
     let k = 0;
     for (const g of parts) {
       pos.set(g.attributes.position.array, k * 3);
+      if (uv && g.attributes.uv) uv.set(g.attributes.uv.array, k * 2);
       if (g.attributes.normal) normal.set(g.attributes.normal.array, k * 3);
       k += g.attributes.position.count;
       g.dispose();
@@ -107,6 +112,7 @@ function batch(root) {
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
     g.setAttribute("normal", new THREE.BufferAttribute(normal, 3));
+    if (uv) g.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
     g.computeBoundingSphere();
     mesh(root, g, m);
   }
@@ -229,6 +235,7 @@ function coveredWalk(p, points, width = 2.7) {
 }
 function tree(p, x, z, h = 8) {
   const r = 2.3 + random() * 1.2;
+  addContactShadow(p, x, z, r * 2.4, r * 2.1, 0.095);
   const g = new THREE.Group();
   g.position.set(x, 0, z);
   p.add(g);
@@ -261,6 +268,7 @@ function tree(p, x, z, h = 8) {
 // Woodland beside CB: tall visible trunks, branching above head height and an
 // irregular high canopy. Keep the ornamental round-tree model elsewhere.
 function woodlandTree(p, x, z, h) {
+  addContactShadow(p, x, z, 5.5, 5, 0.095);
   const g = new THREE.Group();
   g.position.set(x, 0, z);
   p.add(g);
@@ -830,18 +838,6 @@ export function createTerrain(scene) {
     )
       tree(details, x, z, h);
   }
-  // Lamps follow the verified public lanes and remain off their surfaces.
-  for (const [x, z] of [
-    [-61, -120],
-    [-61, -71],
-    [-61, -15],
-    [-58, 29],
-    [-39, 83],
-    [18, 104],
-    [70, 105],
-    [130, 105],
-  ])
-    lamp(details, x, z);
   for (const z of [-19, 13]) {
     const crossing = clip.intersection(
       [
@@ -863,13 +859,26 @@ export function createTerrain(scene) {
   }
   batch(root);
   batch(details);
+  const streetLights = createStreetLights(scene, layout, (x, z) =>
+    [
+      [x, z],
+      [x - 0.3, z],
+      [x + 0.3, z],
+      [x, z - 0.3],
+      [x, z + 0.3],
+    ].every(
+      (p) => !contains(p, layout.occupied) && !contains(p, drivingAndParking),
+    ),
+  );
   return {
     root,
     details,
     audit: { ...audit, vehicleCount, vehicleConflicts, canopyCount },
     layout,
+    streetLights,
     setDetails(show) {
       details.visible = show;
+      streetLights.root.visible = show;
     },
   };
 }

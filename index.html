@@ -56,7 +56,7 @@
         <button role="tab" aria-selected="true" data-tab="building">
           สำรวจอาคาร</button
         ><button role="tab" aria-selected="false" data-tab="references">
-          หลักฐาน <span id="referenceCount">03</span>
+          ภาพจริง <span id="referenceCount"></span>
         </button>
       </div>
       <section id="buildingTab">
@@ -118,6 +118,16 @@
           <button data-view="ee-old" data-east hidden>ตึกเก่าเลข 11</button>
           <button data-view="east-street" data-east hidden>ถนนหน้าอาคาร</button>
         </div>
+        <section id="pointExplorer" class="point-explorer" hidden>
+          <div class="list-heading">
+            <span>จุดสำรวจ</span
+            ><label
+              ><input id="pointLabelsToggle" type="checkbox" checked />
+              ป้ายบนฉาก</label
+            >
+          </div>
+          <div id="pointList"></div>
+        </section>
         <button id="walkButton" class="primary">
           เข้าโหมดเดินชม <span>↗</span>
         </button>
@@ -141,22 +151,27 @@
         </div>
       </section>
       <section id="referencesTab" hidden>
-        <p class="reference-intro">
-          <span id="referenceHeading">แผนที่ทั้งคณะและหลักฐานรายอาคาร</span>
+        <p class="reference-intro" id="referenceHeading">
+          เลือกอาคารเพื่อดูภาพจริง
         </p>
-        <div class="reference-gallery" id="referenceGallery"></div>
-        <div id="buildingSources" class="building-sources"></div>
-        <a
-          class="source-link"
-          href="https://cesium.kku.ac.th/web/pienvichit12/"
-          target="_blank"
-          rel="noreferrer"
-          >เปิดชุดภาพ 360° ของ KKU ↗</a
-        >
-        <div class="reference-note">
-          ภาพ Street View และภาพมุมสูง: ผู้ใช้ให้มา<br />ภาพป้ายทางเข้า: KKU
-          Pienvichit 360
-        </div>
+        <figure class="single-reference" aria-live="polite">
+          <button id="referenceOpen" aria-label="เปิดภาพขนาดใหญ่" disabled>
+            <img id="referenceImage" alt="ภาพจริงของจุดที่เลือก" hidden />
+          </button>
+          <div id="referenceMissing" class="reference-missing">
+            <span>▧</span><b id="referenceMissingText">ยังไม่ได้เลือกอาคาร</b
+            ><code id="referencePath"></code
+            ><small>วางรูปในโฟลเดอร์นี้ แล้วกดรีเฟรชรูป</small>
+          </div>
+          <figcaption>
+            <b id="referenceTitle"></b>
+            <p id="referenceDescription"></p>
+          </figcaption>
+        </figure>
+        <button class="reference-reload" id="referenceReload">
+          ↻ รีเฟรชรูป
+        </button>
+        <div id="buildingSources" hidden></div>
       </section>
     </aside>
     <button
@@ -170,6 +185,7 @@
       ‹
     </button>
     <div id="buildingLabels" class="building-labels"></div>
+    <div id="pointLabels" class="point-labels"></div>
     <div class="scene-label" id="sceneLabel" hidden>
       <i></i><span><b>ตึกเพียรวิจิตร</b><small>PIENVICHIT · EN 16</small></span>
     </div>
@@ -216,9 +232,24 @@
         <i></i> คลิกขวาลากเพื่อเลื่อน
       </div>
       <div class="bottom-controls">
-        <button id="dayNight" aria-pressed="false">
-          ☀ <span>กลางวัน</span></button
-        ><button id="fullscreenButton" aria-label="เต็มหน้าจอ">⛶</button>
+        <button
+          id="dayNight"
+          aria-expanded="false"
+          aria-controls="atmospherePanel"
+        >
+          ☀ <span>แสงและภาพ</span>
+        </button>
+        <button id="photoMode" aria-pressed="false" title="ซ่อนหน้าจอ · H">
+          ▣ <span>โหมดภาพ</span>
+        </button>
+        <button
+          id="snapshotButton"
+          title="บันทึก PNG · Alt+P"
+          aria-label="บันทึกภาพ PNG"
+        >
+          ⇩
+        </button>
+        <button id="fullscreenButton" aria-label="เต็มหน้าจอ">⛶</button>
         <div class="scale"><span></span><b id="scaleLabel">20 m</b></div>
       </div>
     </footer>
@@ -226,6 +257,25 @@
       Mini-map imagery © Esri, Maxar, Earthstar Geographics · Ground modeled in
       3D
     </div>
+    <section
+      id="atmospherePanel"
+      class="atmosphere-panel"
+      aria-label="แสงและภาพ"
+      hidden
+    >
+      <header>
+        <b>แสงและภาพ</b
+        ><button id="atmosphereClose" aria-label="ปิดแผงแสง">×</button>
+      </header>
+      <div class="light-presets">
+        <button data-light="morning" aria-pressed="true">เช้า</button
+        ><button data-light="evening">เย็น</button
+        ><button data-light="night">กลางคืน</button>
+      </div>
+      <p id="lightingNote">เช้า</p>
+      <p class="atmosphere-hint">ไฟทางเท้าจะเปิดอัตโนมัติในโหมดกลางคืน</p>
+    </section>
+    <button id="photoExit" class="photo-exit" hidden>กลับหน้าจอ · Esc</button>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <dialog id="photoDialog">
       <button class="dialog-close" aria-label="ปิดภาพ">×</button

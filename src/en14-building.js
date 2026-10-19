@@ -1,3 +1,4 @@
+import { bakeAmbientDetail, addContactShadow } from "./ambient-detail.js";
 import * as THREE from "three";
 import { en14Parts, en14Garden } from "./en14-layout.js";
 import { palm } from "./model.js";
@@ -23,6 +24,7 @@ const M = {
   flower: mat("#bc9970"),
   rock: mat("#aaa392"),
 };
+for (const [name, m] of Object.entries(M)) m.name = `en14-${name}`;
 function mesh(p, g, m, x = 0, y = 0, z = 0) {
   const o = new THREE.Mesh(g, m);
   o.position.set(x, y, z);
@@ -31,7 +33,27 @@ function mesh(p, g, m, x = 0, y = 0, z = 0) {
   return o;
 }
 function box(p, x, y, z, w, h, d, m = M.white) {
-  return mesh(p, new THREE.BoxGeometry(w, h, d), m, x, y, z);
+  const structural =
+    [M.white, M.wall, M.tile, M.pave].includes(m) && w * h * d > 0.45;
+  const subdivisions = (value) =>
+    structural ? Math.min(20, Math.max(1, Math.ceil(value / 2))) : 1;
+  const o = mesh(
+    p,
+    new THREE.BoxGeometry(
+      w,
+      h,
+      d,
+      subdivisions(w),
+      subdivisions(h),
+      subdivisions(d),
+    ),
+    m,
+    x,
+    y,
+    z,
+  );
+  o.userData.ambientStructure = structural;
+  return o;
 }
 function beam(p, a, b, r = 0.04, m = M.white) {
   const av = new THREE.Vector3(...a),
@@ -451,7 +473,26 @@ export function createEN14(root, detail) {
     else if (s.id === "lab") lab(root, s, detail);
     else office(root, s, detail);
   }
+  if (detail) bakeAmbientDetail(root);
   garden(root, detail);
+  if (detail) {
+    addContactShadow(root, 1, 63.7, 13, 3, 0.075);
+    addContactShadow(root, 24, 29, 22, 2, 0.08);
+    for (const [dx, dz, r] of [
+      [-4, 2, 1.5],
+      [4, 2, 1.3],
+      [-3, -3, 1],
+      [3, -3, 1],
+    ])
+      addContactShadow(
+        root,
+        en14Garden.x + dx,
+        en14Garden.z + dz,
+        r * 2.7,
+        r * 2.2,
+        0.375,
+      );
+  }
   if (detail) {
     // A single permanent boom gate at the right-hand driveway (photo supplied).
     box(root, 35.4, 0.65, 87, 0.5, 1.3, 0.5, M.barrier);
