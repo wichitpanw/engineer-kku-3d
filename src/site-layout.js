@@ -1,3 +1,4 @@
+import { en13Site } from "./en13-layout.js";
 import { en14Garden } from "./en14-layout.js";
 import clip from "../vendor/polygon-clipping/index.js";
 import { buildings, auxiliaries } from "./campus-data.js";
@@ -260,6 +261,12 @@ export const roundabouts = [
   },
 ];
 export const parkingAreas = [
+  {
+    id: "PC-EN13", kind: "car", surface: "pavers", spacing: 2.6,
+    polygon: rectangle(en13Site.parking.x, en13Site.parking.z, en13Site.parking.w, en13Site.parking.d),
+    entry: [[178, 90], [174, 87], [161, 87]],
+    rows: [{ from: [154, 80], to: [167, 80], angle: Math.PI }],
+  },
   {
     id: "PC-EE-SIDE",
     entryWidth: 6,
@@ -533,6 +540,7 @@ export const pedestrianLinks = [
   },
 ];
 export const plazas = [
+  { id: "en13-entry", clearBuildings: true, polygon: rectangle(en13Site.entry.x, en13Site.entry.z, en13Site.entry.w, en13Site.entry.d) },
   {
     id: "en17-entrance-court",
     clearBuildings: true,

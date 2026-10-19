@@ -1,3 +1,4 @@
+import { en13Site } from "./en13-layout.js";
 import * as THREE from "three";
 // Repeated stainless-steel pedestrian fixtures. Positions follow the modeled
 // paths; spacing is illustrative rather than a surveyed inventory of poles.
@@ -13,6 +14,8 @@ export function createStreetLights(scene, layout, canPlace) {
       z < -220 ||
       z > 160 ||
       !canPlace(x, z) ||
+      (Math.abs(x-en13Site.sign.x) < en13Site.sign.w/2+2 &&
+        Math.abs(z-en13Site.sign.z) < 4) ||
       anchors.some((p) => Math.hypot(p.x - x, p.z - z) < 8)
     )
       return;

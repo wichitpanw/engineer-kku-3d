@@ -777,7 +777,9 @@ export function createTerrain(scene) {
       const xx = x + (random() - 0.5) * 4,
         zz = z + (random() - 0.5) * 4;
       const inCBWood = xx > 113 && xx < 164 && zz > -168 && zz < -101;
-      if (!inCBWood && contains([xx, zz], green) && random() > 0.2)
+      // EN13 has explicit photo-based planting with crown clearance.
+      const inEN13Garden = xx > 60 && xx < 180 && zz > 40 && zz < 94;
+      if (!inCBWood && !inEN13Garden && contains([xx, zz], green) && random() > 0.2)
         tree(details, xx, zz, 6 + random() * 4);
     }
   // Dense woodland west of CB, traced from the supplied aerial. Keep trunks

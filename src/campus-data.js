@@ -1,3 +1,4 @@
+import { en13Parts } from "./en13-layout.js";
 import { en14Parts } from "./en14-layout.js";
 import { en17FlatParts, en17Garage, en17EastWing } from "./en17-layout.js";
 // Shared campus registry. Metres, +X east, -Z north; origin is EN16.
@@ -215,8 +216,11 @@ export const buildings = [
     "วิศวกรรมสิ่งแวดล้อม",
     "Environmental Engineering",
     "south",
-    [part(106.5, 54, 85, 15, 12), part(113, 71, 20, 20, 10)],
-    { aliases: ["environmental", "envi"], phase: 4 },
+    en13Parts,
+    { aliases: ["environmental", "envi"], phase: 4, status: "detail",
+      confidence: "อาคารสองชั้น กรอบคอนกรีตบังแดด ผนังอิฐ ป้ายภาควิชาและลานจอดเทียบภาพผู้ใช้; ขนาดและด้านที่ไม่มีภาพยังประมาณ",
+      capture: "ภาพผู้ใช้ / Street View พ.ค. 2019 / ภาพดาวเทียม",
+    },
   ),
   base("EN14", "วิศวกรรมเคมี", "Chemical Engineering", "south", en14Parts, {
     aliases: ["chemical", "เคมี", "ภาควิชาวิศวกรรมเคมี"],

@@ -1,3 +1,4 @@
+import { createEN13, createEN13Site } from "./en13-building.js";
 import { createEN14 } from "./en14-building.js";
 import * as THREE from "three";
 import { createCB } from "./cb-building.js";
@@ -347,6 +348,7 @@ export function createCampusBuildings(scene, pien) {
       const level = new THREE.Group();
       if (b.id === "EN18") anniversary(level, detail);
       else if (b.id === "EN14") createEN14(level, detail);
+      else if (b.id === "EN13") createEN13(level, detail);
       else if (b.id === "EN09") createCB(level, detail);
       else if (b.id === "EN17") {
         createEN17(level, detail);
@@ -362,6 +364,10 @@ export function createCampusBuildings(scene, pien) {
   }
   const services = new THREE.Group();
   root.add(services);
+  const en13Site = new THREE.Group();
+  services.add(en13Site);
+  createEN13Site(en13Site);
+  batch(en13Site);
   const eastCourt = createEastCourtyard(services);
   batch(eastCourt);
   for (const b of auxiliaries)
