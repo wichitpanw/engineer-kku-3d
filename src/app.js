@@ -4,9 +4,9 @@ import { createSceneTools } from "./scene-tools.js?v=20261019-tools";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createPienvichit, createEnvironment } from "./model.js";
-import { createTerrain } from "./terrain.js?v=agricultural-2";
-import { createCampusBuildings } from "./campus-buildings.js?v=agricultural-2";
-import { buildings, STATUS, CAMPUS_BOUNDS } from "./campus-data.js";
+import { createTerrain } from "./terrain.js?v=en18-11";
+import { createCampusBuildings } from "./campus-buildings.js?v=en18-11";
+import { buildings, STATUS, CAMPUS_BOUNDS } from "./campus-data.js?v=en18-11";
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)];
 const escapeHTML = (s) =>
@@ -175,6 +175,10 @@ async function start() {
     }
     if (b.id === "EN09" && side === "front") {
       fly([232, 10, -186], [205, 7, -128], 54);
+      return;
+    }
+    if (b.id === "EN18" && side === "front") {
+      fly([-43, 2.8, -102], [-15, 10.5, -108], 68);
       return;
     }
 
@@ -398,6 +402,7 @@ async function start() {
     );
     $$("[data-agricultural]").forEach(e => e.hidden = !["EN05", "EN12"].includes(id));
     $$("[data-mechanical]").forEach(e => e.hidden = !["EN07", "EN10"].includes(id));
+    $$("[data-en18]").forEach(e => e.hidden = id !== "EN18");
     $("#miniSelected").textContent = id;
     for (const [key, e] of labelElements)
       e.classList.toggle("selected", key === id);
@@ -441,6 +446,17 @@ async function start() {
         "ag-lab": [[-45, 5.5, -34], [-75, 3.6, -42], 56],
         "ag-court": [[-118, 27, -91], [-92, 1, -98], 52],
         "ag-site": [[-85, 195, -69], [-85, 0, -70], 48],
+      };
+    } else if (selected?.id === "EN18" && name.startsWith("en18-")) {
+      const presets = {
+        "en18-main": [[-36.5, 2.3, -102.0], [-14.0, 9.5, -96.0], 68],
+        "en18-stairs": [[-33.5, 2.5, -96.0], [-13.0, 11.5, -106.5], 68],
+        "en18-hall": [[-14.5, 2.2, -120.5], [10.0, 3.2, -74.0], 72],
+        "en18-gear": [[-49.5, 2.4, -142.0], [-22.0, 6.5, -114.0], 65],
+        "en18-west": [[-35.5, 2.5, -55.0], [-19.5, 8.2, -72.0], 72],
+        "en18-rear": [[30.4, 2.2, -58.4], [8.9, 7.8, -60.7], 68],
+        "en18-sw": [[-7.5, 2.6, -38.0], [-7.0, 8.2, -62.0], 66],
+        "en18-roof": [[-6.0, 165.0, -95.0], [-6.0, 0.0, -95.5], 46],
       };
       if (presets[name]) fly(...presets[name]);
     } else if (["EN07", "EN10"].includes(selected?.id) && name.startsWith("me-")) {

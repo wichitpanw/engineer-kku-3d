@@ -643,11 +643,8 @@ export function buildingFootprints() {
   return [...buildings, ...auxiliaries].map((b) => ({
     id: b.id,
     geometry:
-      b.id === "EN18"
-        ? clip.union(
-            polygon(rectangle(-13, -100, 24, 70, 0.58)),
-            polygon(rectangle(7, -69, 28, 36, -0.45)),
-          )
+      b.footprint
+        ? polygon(b.footprint)
         : clip.union(
             ...b.parts.map((p) =>
               polygon(rectangle(p.x, p.z, p.w, p.d, p.rotation || 0)),

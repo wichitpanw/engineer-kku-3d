@@ -1,4 +1,5 @@
 import { createAgriculturalMain, createAgriculturalLab, createAgriculturalSite } from "./agricultural-building.js";
+import { createEN18 } from "./en18-building.js?v=en18-11";
 import { createMechanicalLab, createMechanicalTeaching, createMechanicalCourt } from "./mechanical-building.js";
 import { createEN13, createEN13Site } from "./en13-building.js";
 import { createEN14 } from "./en14-building.js";
@@ -230,103 +231,7 @@ function genericPart(root, s, detail, id) {
     }
   }
 }
-function panel(p, points, m) {
-  const g = new THREE.BufferGeometry();
-  g.setAttribute(
-    "position",
-    new THREE.Float32BufferAttribute(points.flat(), 3),
-  );
-  g.setIndex([0, 1, 2, 0, 2, 3]);
-  g.computeVertexNormals();
-  const o = new THREE.Mesh(g, m);
-  o.material.side = THREE.DoubleSide;
-  o.castShadow = true;
-  o.receiveShadow = !points.every((p) => p[1] >= 21);
-  p.add(o);
-}
-function anniversary(root, detail) {
-  // Two folded concrete wings with glazed diagonal openings and an open lower hall.
-  for (const s of [
-    { x: -13, z: -100, w: 24, d: 70, r: 0.58 },
-    { x: 7, z: -69, w: 28, d: 36, r: -0.45 },
-  ]) {
-    const g = new THREE.Group();
-    g.position.set(s.x, 0, s.z);
-    g.rotation.y = s.r;
-    root.add(g);
-    const w = s.w,
-      d = s.d;
-    box(g, 0, 0.2, 0, w, 0.4, d, M.concrete);
-    // The public ground floor remains open. Service volume is confined to one end.
-    box(g, 0, 3, -d / 2 + 4, w - 3, 6, 7, M.concrete);
-    box(g, 0, 9.2, 0, w, 0.45, d, M.concrete);
-    box(g, 0, 17.1, 0, w, 0.4, d, M.concrete);
-    box(g, 0, 23.6, 0, w, 0.4, d, M.concrete);
-    for (const side of [-1, 1]) {
-      const x = (side * w) / 2;
-      // Upper folded wall rises towards the north, with diagonal lower edge.
-      panel(
-        g,
-        [
-          [x, 9.4, -d / 2],
-          [x, 25, -d / 2],
-          [x, 21.8, d / 2],
-          [x, 17.4, d / 2],
-        ],
-        M.concrete,
-      );
-      for (let z = -d / 2 + 4; z < d / 2; z += 8) {
-        beam(g, [x, 0, z - 3.7], [x, 9, z + 3.7], 0.85, 1.1);
-        beam(g, [x, 9, z - 3.7], [x, 0, z + 3.7], 0.85, 1.1);
-        beam(g, [x, 9, z - 3.7], [x, 17, z + 3.7], 0.65, 0.9);
-        beam(g, [x, 17, z - 3.7], [x, 9, z + 3.7], 0.65, 0.9);
-      }
-      if (detail) {
-        box(g, x - side * 0.4, 13.3, 0, 0.12, 7.4, d - 2, M.glass);
-        for (let z = -d / 2; z < d / 2; z += 4)
-          box(g, x + side * 0.035, 19.8, z, 0.045, 5.4, 0.035, M.edge);
-        for (let yy = 18; yy < 24; yy += 2.7)
-          box(g, x + side * 0.04, yy, 0, 0.035, 0.035, d, M.edge);
-      }
-    }
-    box(g, 0, 20.6, -d / 2, w, 8, 0.35, M.concrete);
-    box(g, 0, 17.5, d / 2, w, 7.4, 0.35, M.concrete);
-    if (detail) {
-      facadeText(g, "อาคาร 50 ปี วิศวะรวมใจ", 0, 16, d / 2 + 0.22, w - 2, 1.4);
-      box(g, 0, 12.8, d / 2 + 0.06, w - 2.5, 7.6, 0.12, M.glass);
-      for (let x = -w / 2 + 2; x < w / 2; x += 3)
-        box(g, x, 12.8, d / 2 + 0.14, 0.09, 7.6, 0.1, M.dark);
-      for (let z = -d / 2 + 8; z < d / 2; z += 8)
-        beam(g, [-w / 2, 8.8, z], [w / 2, 8.8, z], 0.3, 0.5, M.dark);
-    }
-    panel(
-      g,
-      [
-        [-w / 2, 25.1, -d / 2],
-        [w / 2, 25.1, -d / 2],
-        [w / 2, 22, d / 2],
-        [-w / 2, 22, d / 2],
-      ],
-      M.concrete,
-    );
-  }
-  if (detail) {
-    for (let k = 0; k < 6; k++)
-      box(root, 4, k * 0.13 + 0.08, -44 - k * 0.45, 25, 0.16, 1.1, M.concrete);
-    box(root, 0, 9, -69, 22, 0.3, 18, M.concrete);
-    // Beam grid and permanent suspended services under the open hall.
-    for (let z = -121; z < -55; z += 6) {
-      box(root, -4, 8.5, z, 21, 0.45, 0.35, M.dark);
-      box(root, -4, 8.05, z + 0.6, 20, 0.045, 0.045, M.roof);
-    }
-    for (const x of [-18, -4, 10])
-      for (const z of [-110, -96, -80]) {
-        box(root, x, 0.75, z, 2.8, 0.1, 1, M.dark);
-        for (const dx of [-1, 1])
-          box(root, x + dx, 0.38, z, 0.06, 0.75, 0.7, M.frame);
-      }
-  }
-}
+
 export function createCampusBuildings(scene, pien) {
   const root = new THREE.Group();
   scene.add(root);
@@ -348,7 +253,7 @@ export function createCampusBuildings(scene, pien) {
       [false, 260],
     ]) {
       const level = new THREE.Group();
-      if (b.id === "EN18") anniversary(level, detail);
+      if (b.id === "EN18") createEN18(level, detail);
       else if (b.id === "EN14") createEN14(level, detail);
       else if (b.id === "EN13") createEN13(level, detail);
       else if (b.id === "EN05") createAgriculturalMain(level, detail);

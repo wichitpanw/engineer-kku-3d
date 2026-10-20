@@ -3,6 +3,7 @@ import { mechanicalLabParts, mechanicalTeachingParts } from "./mechanical-layout
 import { en13Parts } from "./en13-layout.js";
 import { en14Parts } from "./en14-layout.js";
 import { en17FlatParts, en17Garage, en17EastWing } from "./en17-layout.js";
+import { en18Footprint, en18Center } from "./en18-layout.js";
 // Shared campus registry. Metres, +X east, -Z north; origin is EN16.
 // Footprints traced from the supplied enmap sheets and the inspected Maps aerial.
 // Heights and offsets are estimates, never a surveyed CAD dataset.
@@ -329,19 +330,11 @@ export const buildings = [
     {
       phase: 1,
       status: "detail",
-      center: [-5, -90],
-      height: 25,
-      footprint: [
-        [-37, -134],
-        [-23, -140],
-        [30, -108],
-        [28, -89],
-        [36, -58],
-        [-3, -44],
-        [-36, -86],
-      ],
+      center: en18Center,
+      height: 25.5,
+      footprint: en18Footprint,
       aliases: ["50ปี", "50 ปี", "วิศวะรวมใจ", "ห้องสมุด", "library"],
-      usage: "ห้องสมุดคณะวิศวกรรมศาสตร์ปัจจุบัน",
+      usage: "ห้องสมุดคณะวิศวกรรมศาสตร์ · อาคาร 50 ปี",
       sources: [
         "enmap1",
         "enmap2",
@@ -350,8 +343,11 @@ export const buildings = [
         "en18-maps",
         "user-library",
       ],
+      capture:
+        "Street View พ.ค. 2019 / ภาพผู้ใช้ / แกลเลอรี Google Maps 2019–2025 / ผังภาพถ่ายดาวเทียมความละเอียดสูง",
       confidence:
-        "ผนังเฉียงและเสาทแยงตรวจจากรีวิว ม.ค. 2019 และ ธ.ค. 2025; หน้าที่ห้องสมุดยืนยันโดยผู้ใช้; สัดส่วนยังประมาณ",
+        "ปีกโซลาร์เซลล์ 4 แถวเอียง ~34°, ปีกขาว 6 ชั้น, ระเบียงชมวิวสามเหลี่ยมทิศตะวันออกเฉียงใต้, ดาดฟ้าเครื่องกลคูลลิ่งทาวเวอร์ 3 ตัว และซุ้มป้ายชื่อตึกหน้าบันได ตรวจเทียบภาพถ่ายและผังดาวเทียม; ความสูงและระยะสัดส่วนละเอียดประมาณ",
+      mapPin: { latitude: 16.473407989443096, longitude: 102.82319594085374 },
     },
   ),
 ];
