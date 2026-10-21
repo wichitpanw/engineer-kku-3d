@@ -4,6 +4,7 @@ import { en13Parts } from "./en13-layout.js";
 import { en14Parts } from "./en14-layout.js";
 import { en17FlatParts, en17Garage, en17EastWing } from "./en17-layout.js";
 import { en18Footprint, en18Center } from "./en18-layout.js?v=en18-20";
+import { en08Parts } from "./en08-layout.js?v=en08-1";
 // Shared campus registry. Metres, +X east, -Z north; origin is EN16.
 // Footprints traced from the supplied enmap sheets and the inspected Maps aerial.
 // Heights and offsets are estimates, never a surveyed CAD dataset.
@@ -127,13 +128,10 @@ export const buildings = [
     "วิศวกรรมอุตสาหการ",
     "Industrial Engineering",
     "west",
-    [
-      part(-105, 15, 80, 12, 12),
-      part(-139, 37, 13, 43, 12),
-      part(-71, 37, 13, 43, 12),
-      part(-105, 57, 80, 12, 12),
-    ],
-    { phase: 5, aliases: ["industrial", "ie", "อุตสาหการ"] },
+    en08Parts,
+    { phase: 5, status: "detail", aliases: ["industrial", "ie", "อุตสาหการ"],
+      capture: "ภาพดาวเทียม Google z19 / Street View พ.ค. 2019 / ภาพหมุด Google Maps",
+      confidence: "ผังสองซีกตามดาวเทียม: ปีกคอนกรีตสองชั้นหลังคาดาดฟ้ารอบคอร์ทต้นไม้ และปีกอิฐ/ชมพูหลังคาแดง โถงหลังคาสีแทน สำนักงานชั้นเดียวป้ายขาว; ความสูงและด้านที่ไม่มีภาพประมาณ" },
   ),
   base(
     "EN09",

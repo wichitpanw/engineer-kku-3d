@@ -4,9 +4,9 @@ import { createSceneTools } from "./scene-tools.js?v=20261019-tools";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createPienvichit, createEnvironment } from "./model.js";
-import { createTerrain } from "./terrain.js?v=en18-11";
-import { createCampusBuildings } from "./campus-buildings.js?v=en18-20";
-import { buildings, STATUS, CAMPUS_BOUNDS } from "./campus-data.js?v=en18-11";
+import { createTerrain } from "./terrain.js?v=en08-1";
+import { createCampusBuildings } from "./campus-buildings.js?v=en08-3";
+import { buildings, STATUS, CAMPUS_BOUNDS } from "./campus-data.js?v=en08-1";
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)];
 const escapeHTML = (s) =>
@@ -403,6 +403,7 @@ async function start() {
     $$("[data-agricultural]").forEach(e => e.hidden = !["EN05", "EN12"].includes(id));
     $$("[data-mechanical]").forEach(e => e.hidden = !["EN07", "EN10"].includes(id));
     $$("[data-en18]").forEach(e => e.hidden = id !== "EN18");
+    $$("[data-en08]").forEach(e => e.hidden = id !== "EN08");
     $("#miniSelected").textContent = id;
     for (const [key, e] of labelElements)
       e.classList.toggle("selected", key === id);
@@ -447,6 +448,13 @@ async function start() {
         "ag-court": [[-118, 27, -91], [-92, 1, -98], 52],
         "ag-site": [[-85, 195, -69], [-85, 0, -70], 48],
       };
+    } else if (selected?.id === "EN08" && name.startsWith("en08-")) {
+      const presets = {
+        "en08-office": [[-38, 2.2, 30], [-62, 4, 33], 66],
+        "en08-south": [[-168, 2.0, 70], [-122, 5, 48], 62],
+        "en08-top": [[-100, 150, 33], [-100, 0, 32.5], 46],
+      };
+      if (presets[name]) fly(...presets[name]);
     } else if (selected?.id === "EN18" && name.startsWith("en18-")) {
       const presets = {
         "en18-main": [[-56.0, 2.4, -104.0], [-22.0, 7.5, -92.0], 64],

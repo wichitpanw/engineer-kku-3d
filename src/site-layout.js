@@ -2,7 +2,7 @@ import { mechanicalGarage } from "./mechanical-layout.js";
 import { en13Site } from "./en13-layout.js";
 import { en14Garden } from "./en14-layout.js";
 import clip from "../vendor/polygon-clipping/index.js";
-import { buildings, auxiliaries } from "./campus-data.js";
+import { buildings, auxiliaries } from "./campus-data.js?v=en08-1";
 export const SITE_REFERENCE = {
   originPixel: [458.38674602657557, 650.5646753944457],
   metersPerPixel: 0.57265497771093,
@@ -71,15 +71,16 @@ export const roadNetwork = [
   {
     id: "inner-loop",
     width: 6.5,
+    // West leg re-traced on the Google z19 satellite mosaic (21 Oct 2026): ~6 m east of the old line.
     points: [
-      [-53, -173],
-      [-53, -125],
-      [-53, -80],
-      [-53, -38],
-      [-54, 0],
-      [-53, 23],
-      [-49, 40],
-      [-41, 56],
+      [-48, -173],
+      [-47, -125],
+      [-47, -80],
+      [-46.5, -38],
+      [-45.5, 0],
+      [-44.5, 23],
+      [-43.5, 40],
+      [-39.5, 56],
       [-31, 71],
       [-18, 84],
       [-2, 92],
@@ -100,26 +101,25 @@ export const roadNetwork = [
     id: "north-lane",
     width: 5.5,
     points: [
-      [-53, -173],
+      [-48, -173],
       [15, -173],
       [91, -173],
-      [101, -173],
-      [107, -168],
-      [109, -160],
-      [109, -129],
-      [109, -106],
-      [104, -100],
-      [97, -96],
+      [113, -173],
+      [119, -168],
+      [121, -160],
+      [121, -129],
+      [121, -108],
+      [117, -100],
+      [109, -96],
     ],
   },
   {
     id: "cb-north-connection",
     width: 5.5,
     points: [
-      [101, -173],
+      [113, -173],
       [155, -173],
-      [210, -173],
-      [284, -173],
+      [182, -173],
     ],
   },
   {
@@ -168,21 +168,10 @@ export const roadNetwork = [
     ],
   },
   {
-    id: "east-lane",
-    width: 6.5,
-    points: [
-      [284, -176],
-      [284, -90],
-      [284, -28],
-      [284, 50],
-      [284, 139],
-    ],
-  },
-  {
     id: "northwest-entry",
     width: 9,
     points: [
-      [-53, -173],
+      [-48, -173],
       [-68, -188],
       [-95, -198],
       [-121, -182],
@@ -214,13 +203,22 @@ export const roadNetwork = [
     ],
   },
   {
-    id: "agri-north-entry",
+    // Street View May 2019: only a short paved drive into the yard; no lane runs west along z -149.
+    id: "agri-north-drive",
     width: 4,
     points: [
-      [-191, -127],
-      [-163, -144],
-      [-123, -149],
-      [-53, -149],
+      [-47, -131],
+      [-66, -131],
+    ],
+  },
+  {
+    // Satellite: the east road continues straight south to Wittayawattana Rd (T-junction).
+    id: "east-south-link",
+    width: 6.5,
+    points: [
+      [184, 79],
+      [186, 98],
+      [188, 140.5],
     ],
   },
   {
@@ -495,9 +493,9 @@ export const pedestrianLinks = [
     covered: false,
     width: 2.4,
     points: [
-      [-46, -170],
-      [-46, -84],
-      [-43, -51],
+      [-41.5, -170],
+      [-41.5, -84],
+      [-41, -51],
       [-40, -42],
     ],
   },
@@ -506,10 +504,10 @@ export const pedestrianLinks = [
     covered: false,
     width: 2.65,
     points: [
-      [-40, 18],
-      [-42, 33],
-      [-42, 43],
-      [-36, 56],
+      [-37.5, 18],
+      [-38.5, 33],
+      [-37.5, 43],
+      [-32.5, 56],
       [-27, 67],
       [-16, 78],
     ],
@@ -540,10 +538,10 @@ export const pedestrianLinks = [
   },
 ];
 export const plazas = [
-  { id: "agri-east-entrance", clearBuildings: true, polygon: rectangle(-62.5,-84,13,5.2) },
+  { id: "agri-east-entrance", clearBuildings: true, polygon: rectangle(-59.5,-84,19,5.2) },
   { id: "agri-north-apron", clearBuildings: true, polygon: rectangle(-85,-130,39,10) },
-  { id: "agri-lab-access", clearBuildings: true, polygon: rectangle(-63,-59,15,6) },
-  { id: "agri-lab-front", clearBuildings: true, polygon: rectangle(-62.5,-42,12,6) },
+  { id: "agri-lab-access", clearBuildings: true, polygon: rectangle(-60,-59,21,6) },
+  { id: "agri-lab-front", clearBuildings: true, polygon: rectangle(-59.5,-42,18,6) },
   { id: "agri-south-apron", clearBuildings: true, polygon: rectangle(-97,-16,40,18) },
   {
     id: "mechanical-inner-court", clearBuildings: true,
@@ -610,13 +608,13 @@ export const plazas = [
   {
     id: "anniversary-apron",
     polygon: [
-      [-45, -139],
+      [-43, -139],
       [-19, -146],
       [37, -112],
       [39, -53],
       [25, -42],
       [-32, -42],
-      [-44, -61],
+      [-43, -61],
     ],
   },
   {

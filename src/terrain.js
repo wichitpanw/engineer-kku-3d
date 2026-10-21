@@ -1,7 +1,7 @@
 import { createStreetLights } from "./street-lights.js?v=half-density";
 import { addContactShadow } from "./ambient-detail.js";
 import * as THREE from "three";
-import { buildings } from "./campus-data.js";
+import { buildings } from "./campus-data.js?v=en08-1";
 import clip from "../vendor/polygon-clipping/index.js";
 import {
   makeSiteLayout,
@@ -9,7 +9,7 @@ import {
   rectangle,
   stroke,
   area,
-} from "./site-layout.js";
+} from "./site-layout.js?v=roads-1";
 const material = (color, extra = {}) =>
   new THREE.MeshStandardMaterial({ color, roughness: 0.96, ...extra });
 const M = {
@@ -779,13 +779,15 @@ export function createTerrain(scene) {
       const inCBWood = xx > 113 && xx < 164 && zz > -168 && zz < -101;
       // EN13 has explicit photo-based planting with crown clearance.
       const inEN13Garden = xx > 60 && xx < 180 && zz > 40 && zz < 94;
+      // EN08 courts are planted explicitly by its own model.
+      const inEN08 = xx > -150 && xx < -52 && zz > 6 && zz < 58;
       const nearMechanicalRoof = xx > -220 && xx < -100 && zz > -145 && zz < 35 &&
         layout.footprints.some(f => f.geometry.some(poly => poly[0].some((a, i, ring) => {
           const b = ring[(i+1)%ring.length], dx=b[0]-a[0], dz=b[1]-a[1];
           const t=Math.max(0,Math.min(1,((xx-a[0])*dx+(zz-a[1])*dz)/(dx*dx+dz*dz || 1)));
           return Math.hypot(xx-a[0]-t*dx,zz-a[1]-t*dz)<5;
         })));
-      if (!(xx > -112 && xx < -56 && zz > -145 && zz < -15) && !inCBWood && !inEN13Garden && !(xx > -214 && xx < -188 && zz > -58 && zz < -23) && !nearMechanicalRoof && contains([xx, zz], green) && random() > 0.2)
+      if (!(xx > -112 && xx < -56 && zz > -145 && zz < -15) && !inCBWood && !inEN13Garden && !inEN08 && !(xx > -214 && xx < -188 && zz > -58 && zz < -23) && !nearMechanicalRoof && contains([xx, zz], green) && random() > 0.2)
         tree(details, xx, zz, 6 + random() * 4);
     }
   // Dense woodland west of CB, traced from the supplied aerial. Keep trunks
