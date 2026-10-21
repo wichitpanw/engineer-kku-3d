@@ -4,7 +4,7 @@ import {
   en18SolarWing,
   en18GearGallery,
   en18Annexes,
-} from './en18-layout.js';
+} from './en18-layout.js?v=en18-20';
 
 // Generate realistic cast-in-place architectural concrete texture (ปูนเปลือยมีคราบแนวตั้งธรรมชาติ ไม่เป็นตารางหมากรุก)
 function makeConcreteTexture(baseRgb = [156, 160, 154], seamHex = '#858983') {
@@ -377,7 +377,9 @@ function createMainBlock(root, detail) {
   // --------------------------------------------------------------------------
   // A. North-West Front Cantilevered Box ("อาคาร 50 ปี วิศวะรวมใจ") & Lobby
   // --------------------------------------------------------------------------
-  const upperFrontH = 16.2 - lobbyH;
+  // Review photos: the solid box is about twice the lobby height and its top meets the lattice wall's top edge.
+  const cantTopH = 21.0;
+  const upperFrontH = cantTopH - lobbyH;
   // Cantilevered box spans x = -6.5m to +11.5m at the NW front (-hd to -hd + 14.0m)
   // Leaving the West Corner (x < -6.5m) free for the dramatic Sharp West Wing!
   const cantFrontW = 18.0;
@@ -887,7 +889,7 @@ function createMainBlock(root, detail) {
   // H. 100% Closed Cream Roof over the Main Block
   // --------------------------------------------------------------------------
   box(g, westCoreCX, facadeH - 0.2, 5.0, westCoreW, 0.4, rearD, M.roofCream);
-  box(g, cantFrontCX, 16.2 - 0.15, -hd + 7.0, cantFrontW, 0.35, 14.0, M.roofCream);
+  box(g, cantFrontCX, cantTopH - 0.15, -hd + 7.0, cantFrontW, 0.35, 14.0, M.roofCream);
   box(g, westCoreCX, facadeH + 0.2, hd - 0.25, westCoreW, 0.4, 0.5, M.concreteDark);
 }
 
@@ -923,9 +925,9 @@ function createSolarWingAndProw(root, detail) {
   wallShape.lineTo(18.6, 6.8);
   wallShape.lineTo(20.5, 10.0);
   wallShape.lineTo(wallLen + 0.4, 5.2);
-  wallShape.lineTo(wallLen + 0.4, 17.5);
-  wallShape.lineTo(2.0, 24.5);
-  wallShape.lineTo(0.0, 22.2);
+  wallShape.lineTo(wallLen + 0.4, 21.0);
+  wallShape.lineTo(2.0, 26.0);
+  wallShape.lineTo(0.0, 25.0);
   wallShape.closePath();
 
   const upperWall = extrudeShape(latticeGroup, wallShape, 0.9, M.concrete);
@@ -962,6 +964,17 @@ function createSolarWingAndProw(root, detail) {
 
   const atriumGlass = extrudeShape(latticeGroup, glassShape, 0.16, M.glass);
   atriumGlass.position.z = -0.55;
+
+  // Review photos show the lobby glazed full-height behind the struts, not an open void below the peaks.
+  const lobbyGlassStart = 1.2, lobbyGlassEnd = wallLen - 0.2, lobbyGlassBase = 0.96;
+  const lobbyGlassH = 5.2 - lobbyGlassBase; // up to the vestibule ceiling
+  box(latticeGroup, (lobbyGlassStart + lobbyGlassEnd) / 2, lobbyGlassBase + lobbyGlassH / 2, -0.55,
+    lobbyGlassEnd - lobbyGlassStart, lobbyGlassH, 0.12, M.glass);
+  for (let s = lobbyGlassStart; s <= lobbyGlassEnd + 0.01; s += 1.6) {
+    box(latticeGroup, s, lobbyGlassBase + lobbyGlassH / 2, -0.47, 0.08, lobbyGlassH, 0.1, M.metalGrey);
+  }
+  box(latticeGroup, (lobbyGlassStart + lobbyGlassEnd) / 2, lobbyGlassBase + 2.5, -0.47,
+    lobbyGlassEnd - lobbyGlassStart, 0.08, 0.1, M.metalGrey);
 
   if (detail) {
     for (let s = 4.0; s <= 19.0; s += 1.6) {
@@ -1008,23 +1021,28 @@ function createSolarWingAndProw(root, detail) {
   const seSpineJoin   = [19.30, -68.23];
 
   const vProwBase    = [prowBase[0], 0, prowBase[1]];
-  const vProwNose    = [prowBase[0], 22.2, prowBase[1]];
-  const vProwPeak    = [prowBase[0] + 1.46, 24.5, prowBase[1] + 1.37];
-  const vProwPeakNW  = [prowBase[0] - 1.25, 23.4, prowBase[1] - 2.15];
+  // Street View: the sharp prow arris rises almost to the top, which is cut by a small, nearly flat cap.
+  const vProwNose    = [prowBase[0], 25.0, prowBase[1]];
+  const vProwPeak    = [prowBase[0] + 1.46, 26.0, prowBase[1] + 1.37];
+  const vProwPeakNW  = [prowBase[0] + 0.9, 25.6, prowBase[1] - 1.4];
+
+  // Street View 2019: the solar wing is one mono-pitch plane falling from the prow apex to the
+  // low north-east eaves; the north face drops steeply toward the gallery, the lattice face
+  // slopes gently down to the cantilever box. Heights are estimated from photo proportions.
 
   const vNwBase      = [nwEave[0], 0, nwEave[1]];
-  const vNwTop       = [nwEave[0], 16.5, nwEave[1]];
+  const vNwTop       = [nwEave[0], 24.4, nwEave[1]];
   const vNorthBase   = [northEave[0], 0, northEave[1]];
-  const vNorthTop    = [northEave[0], 15.6, northEave[1]];
+  const vNorthTop    = [northEave[0], 12.0, northEave[1]];
   const vNeMidBase   = [neMidEave[0], 0, neMidEave[1]];
-  const vNeMidTop    = [neMidEave[0], 15.6, neMidEave[1]];
+  const vNeMidTop    = [neMidEave[0], 11.5, neMidEave[1]];
   const vEastBase    = [eastEave[0], 0, eastEave[1]];
-  const vEastTop     = [eastEave[0], 16.0, eastEave[1]];
+  const vEastTop     = [eastEave[0], 12.5, eastEave[1]];
   const vSeRightBase = [seRightCorner[0], 0, seRightCorner[1]];
-  const vSeRightTop  = [seRightCorner[0], 16.8, seRightCorner[1]];
+  const vSeRightTop  = [seRightCorner[0], 14.5, seRightCorner[1]];
   const vSeSpineBase = [seSpineJoin[0], 0, seSpineJoin[1]];
-  const vSeSpineTop  = [seSpineJoin[0], 17.2, seSpineJoin[1]];
-  const vSpineCornerTop = [innerCorner[0], 17.5, innerCorner[1]];
+  const vSeSpineTop  = [seSpineJoin[0], 16.5, seSpineJoin[1]];
+  const vSpineCornerTop = [innerCorner[0], 21.0, innerCorner[1]];
 
   polyMesh(
     g,
@@ -1059,26 +1077,25 @@ function createSolarWingAndProw(root, detail) {
   emblemGroup.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), chamferNormal);
   g.add(emblemGroup);
 
-  const emblemR = 0.88;
-  const gearDisc = new THREE.Mesh(new THREE.CylinderGeometry(emblemR * 0.85, emblemR * 0.85, 0.14, 32), M.metalDark);
+  // Steel gear ring lying on the cap (seen edge-on from the street as a dark ring with a light rim).
+  const emblemR = 1.05;
+  const gearDisc = new THREE.Mesh(new THREE.CylinderGeometry(emblemR * 0.82, emblemR * 0.82, 0.16, 36), M.metalDark);
   gearDisc.rotation.x = Math.PI / 2;
+  gearDisc.position.z = 0.1;
   emblemGroup.add(gearDisc);
 
   const apexTeeth = 16;
   for (let i = 0; i < apexTeeth; i++) {
     const theta = (i / apexTeeth) * Math.PI * 2;
-    const tx = Math.cos(theta) * (emblemR * 0.92);
-    const ty = Math.sin(theta) * (emblemR * 0.92);
-    const tooth = box(emblemGroup, tx, ty, 0, 0.22, 0.18, 0.16, M.gold);
+    const tooth = box(emblemGroup, Math.cos(theta) * emblemR * 0.9, Math.sin(theta) * emblemR * 0.9, 0.1, 0.24, 0.2, 0.18, M.metalGrey);
     tooth.rotation.z = theta;
   }
-  const goldRing = new THREE.Mesh(new THREE.TorusGeometry(emblemR * 0.72, 0.07, 12, 32), M.gold);
-  goldRing.position.z = 0.05;
-  emblemGroup.add(goldRing);
-  const innerHub = new THREE.Mesh(new THREE.TorusGeometry(emblemR * 0.38, 0.05, 10, 24), M.gold);
-  innerHub.position.z = 0.06;
-  emblemGroup.add(innerHub);
-  box(emblemGroup, 0, 0, 0.08, emblemR * 0.28, emblemR * 0.58, 0.06, M.curbWhite);
+  const outerRim = new THREE.Mesh(new THREE.TorusGeometry(emblemR * 0.8, 0.06, 10, 36), M.metalGrey);
+  outerRim.position.z = 0.19;
+  emblemGroup.add(outerRim);
+  const innerRim = new THREE.Mesh(new THREE.TorusGeometry(emblemR * 0.48, 0.05, 10, 28), M.metalGrey);
+  innerRim.position.z = 0.19;
+  emblemGroup.add(innerRim);
 
   // --------------------------------------------------------------------------
   // C. 100% Closed Perimeter Concrete Walls & Smooth Planar Solar Roof Deck
@@ -1121,9 +1138,10 @@ function createSolarWingAndProw(root, detail) {
 
   const roofMesh = polyMesh(g, roofVerts, roofIndices, M.roofDark);
 
-  beam(g, vProwNose, vProwPeak, 0.9, 0.9, M.concrete);
-  beam(g, vProwNose, vProwPeakNW, 0.9, 0.9, M.concrete);
-  beam(g, vProwPeak, vProwPeakNW, 0.9, 0.9, M.concrete);
+  // Thin arrises only: the real cap has crisp edges, not a thick framed ledge.
+  beam(g, vProwNose, vProwPeak, 0.18, 0.18, M.concrete);
+  beam(g, vProwNose, vProwPeakNW, 0.18, 0.18, M.concrete);
+  beam(g, vProwPeak, vProwPeakNW, 0.18, 0.18, M.concrete);
   beam(g, vProwPeakNW, vNwTop, 0.65, 0.85, M.concrete);
   beam(g, vProwPeak, vSpineCornerTop, 0.65, 0.85, M.concrete);
   beam(g, vNwTop, vNorthTop, 0.55, 0.75, M.concreteDark);
@@ -1375,7 +1393,8 @@ function createForecourtAndAnnexes(root, detail) {
   // B. White Half-Gear Arch Sign "คณะวิศวกรรมศาสตร์" on Green Mound (Photo 4)
   // --------------------------------------------------------------------------
   const signGroup = new THREE.Group();
-  signGroup.position.set(-28.2, 0, -98.5);
+  // Street View (May 2019): the sign stands on the lawn beside the big tree, south-west of the cantilever box.
+  signGroup.position.set(-38.5, 0, -82.5);
   signGroup.rotation.y = -Math.PI * 0.68;
   g.add(signGroup);
 
@@ -1419,7 +1438,10 @@ function createForecourtAndAnnexes(root, detail) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     const str = 'คณะวิศวกรรมศาสตร์';
-    const chars = [...str];
+    // Keep Thai vowels/tone marks attached to their base consonant.
+    const chars = typeof Intl !== 'undefined' && Intl.Segmenter
+      ? [...new Intl.Segmenter('th', { granularity: 'grapheme' }).segment(str)].map((s) => s.segment)
+      : str.match(/.[\u0E31\u0E34-\u0E3A\u0E47-\u0E4E]*/g);
     const centerX = 512, centerY = 460, radiusPx = 335;
     const startAngle = -Math.PI * 0.82;
     const endAngle = -Math.PI * 0.18;
@@ -1441,7 +1463,8 @@ function createForecourtAndAnnexes(root, detail) {
     signGroup.add(textPlane);
 
     const treeGroup = new THREE.Group();
-    treeGroup.position.set(-24.5, 0, -104.5);
+    // Street-level photos show this tree just south-west of the cantilever box, not in front of the lattice.
+    treeGroup.position.set(-34.5, 0, -86.5);
     g.add(treeGroup);
     const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.42, 4.8, 10), M.trunk);
     trunk.position.y = 2.4;

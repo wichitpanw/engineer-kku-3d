@@ -1,5 +1,5 @@
 import { createAgriculturalMain, createAgriculturalLab, createAgriculturalSite } from "./agricultural-building.js";
-import { createEN18 } from "./en18-building.js?v=en18-11";
+import { createEN18 } from "./en18-building.js?v=en18-20";
 import { createMechanicalLab, createMechanicalTeaching, createMechanicalCourt } from "./mechanical-building.js";
 import { createEN13, createEN13Site } from "./en13-building.js";
 import { createEN14 } from "./en14-building.js";

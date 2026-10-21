@@ -3,7 +3,7 @@ import { mechanicalLabParts, mechanicalTeachingParts } from "./mechanical-layout
 import { en13Parts } from "./en13-layout.js";
 import { en14Parts } from "./en14-layout.js";
 import { en17FlatParts, en17Garage, en17EastWing } from "./en17-layout.js";
-import { en18Footprint, en18Center } from "./en18-layout.js";
+import { en18Footprint, en18Center } from "./en18-layout.js?v=en18-20";
 // Shared campus registry. Metres, +X east, -Z north; origin is EN16.
 // Footprints traced from the supplied enmap sheets and the inspected Maps aerial.
 // Heights and offsets are estimates, never a surveyed CAD dataset.

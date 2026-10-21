@@ -5,7 +5,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createPienvichit, createEnvironment } from "./model.js";
 import { createTerrain } from "./terrain.js?v=en18-11";
-import { createCampusBuildings } from "./campus-buildings.js?v=en18-11";
+import { createCampusBuildings } from "./campus-buildings.js?v=en18-20";
 import { buildings, STATUS, CAMPUS_BOUNDS } from "./campus-data.js?v=en18-11";
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)];
@@ -449,8 +449,9 @@ async function start() {
       };
     } else if (selected?.id === "EN18" && name.startsWith("en18-")) {
       const presets = {
-        "en18-main": [[-36.5, 2.3, -102.0], [-14.0, 9.5, -96.0], 68],
-        "en18-stairs": [[-33.5, 2.5, -96.0], [-13.0, 11.5, -106.5], 68],
+        "en18-main": [[-56.0, 2.4, -104.0], [-22.0, 7.5, -92.0], 64],
+        "en18-stairs": [[-34.0, 2.5, -92.0], [-13.0, 11.5, -104.0], 68],
+        "en18-prow": [[-50.0, 1.8, -150.0], [-18.0, 11.0, -112.0], 70],
         "en18-hall": [[-14.5, 2.2, -120.5], [10.0, 3.2, -74.0], 72],
         "en18-gear": [[-49.5, 2.4, -142.0], [-22.0, 6.5, -114.0], 65],
         "en18-west": [[-35.5, 2.5, -55.0], [-19.5, 8.2, -72.0], 72],
