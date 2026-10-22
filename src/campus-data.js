@@ -7,7 +7,7 @@ import { en18Footprint, en18Center } from "./en18-layout.js?v=en18-20";
 import { en08Parts } from "./en08-layout.js?v=en08-6";
 import { en15Parts } from "./en15-layout.js?v=en15-1";
 import { en06Parts } from "./en06-layout.js?v=en06-1";
-import { en01Parts, en02Parts } from "./civil-layout.js?v=handoff-1";
+import { en01Parts, en02Parts } from "./civil-layout.js?v=handoff-4";
 // Shared campus registry. Metres, +X east, -Z north; origin is EN16.
 // Footprints traced from the supplied enmap sheets and the inspected Maps aerial.
 // Heights and offsets are estimates, never a surveyed CAD dataset.
@@ -269,7 +269,7 @@ export const buildings = [
     "central",
     [
       part(0, -19, 66, 24, 37, "custom"),
-      part(7, 9, 30, 30, 16, "custom", Math.PI / 4),
+      part(7, 18, 26.7, 26.7, 16, "custom", Math.PI / 4),
     ],
     {
       status: "detail",

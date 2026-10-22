@@ -656,7 +656,10 @@ export function createPienvichit(scene) {
   cyl(site, -8, 16.4, 29, 6.05, 0.4, M.white);
   cyl(site, -8, 16.63, 29, 5.65, 0.13, M.roof);
   const lower = new THREE.Group();
-  lower.position.set(7, 0, 28);
+  // Fitted between the tower podium (piers at z 16.8) and EN14's east block: the
+  // satellite shows the hall touching both, so it is scaled to a 24 m square.
+  lower.position.set(7, 0, 37);
+  lower.scale.set(24 / 27, 1, 24 / 27);
   lower.rotation.y = Math.PI / 4;
   site.add(lower);
   box(lower, 0, 4, 0, 27, 8, 27, M.white);
@@ -684,8 +687,6 @@ export function createPienvichit(scene) {
   for (const [x, z, h] of [
     [-17, 40, 8],
     [-20, 43, 9],
-    [-1, 23, 9],
-    [14, 23, 8],
     [28, 24, 10],
     [39, 12, 7],
     [38, -6, 8],

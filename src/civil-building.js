@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { en01Parts, en02Parts, civilSite } from "./civil-layout.js?v=handoff-1";
+import { en01Parts, en02Parts, civilSite } from "./civil-layout.js?v=handoff-4";
 const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.86, ...extra });
 const M = {
   cream: mat("#e6dfcd"), white: mat("#efede6"), plinth: mat("#d9d6cc"), pink: mat("#e3cfc6"),

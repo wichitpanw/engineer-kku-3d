@@ -10,8 +10,8 @@ import { createEN14 } from "./en14-building.js";
 import * as THREE from "three";
 import { createCB } from "./cb-building.js";
 import { createEN17 } from "./en17-building.js";
-import { batch } from "./model.js";
-import { buildings, auxiliaries } from "./campus-data.js?v=handoff-1";
+import { batch } from "./model.js?v=en16-hall2";
+import { buildings, auxiliaries } from "./campus-data.js?v=handoff-4";
 import {
   createComputerElectrical,
   createElectricalConnected,

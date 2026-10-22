@@ -2,7 +2,7 @@ import { mechanicalGarage } from "./mechanical-layout.js";
 import { en13Site } from "./en13-layout.js";
 import { en14Garden } from "./en14-layout.js";
 import clip from "../vendor/polygon-clipping/index.js";
-import { buildings, auxiliaries } from "./campus-data.js?v=handoff-1";
+import { buildings, auxiliaries } from "./campus-data.js?v=handoff-4";
 export const SITE_REFERENCE = {
   originPixel: [458.38674602657557, 650.5646753944457],
   metersPerPixel: 0.57265497771093,

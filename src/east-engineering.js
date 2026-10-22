@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { palm } from "./model.js";
+import { palm } from "./model.js?v=en16-hall2";
 import { eastPlanting } from "./east-planting.js";
 import { eastCanopies } from "./east-canopies.js";
 

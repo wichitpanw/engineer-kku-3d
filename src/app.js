@@ -3,10 +3,10 @@ import { photosForBuilding, loadPhotoManifest } from "./building-photos.js?v=pho
 import { createSceneTools } from "./scene-tools.js?v=20261019-tools";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { createPienvichit, createEnvironment } from "./model.js";
-import { createTerrain } from "./terrain.js?v=handoff-2";
-import { createCampusBuildings } from "./campus-buildings.js?v=handoff-2";
-import { buildings, STATUS, CAMPUS_BOUNDS } from "./campus-data.js?v=handoff-1";
+import { createPienvichit, createEnvironment } from "./model.js?v=en16-hall2";
+import { createTerrain } from "./terrain.js?v=handoff-4";
+import { createCampusBuildings } from "./campus-buildings.js?v=handoff-4";
+import { buildings, STATUS, CAMPUS_BOUNDS } from "./campus-data.js?v=handoff-4";
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)];
 const escapeHTML = (s) =>

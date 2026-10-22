@@ -1,7 +1,7 @@
 import { createStreetLights } from "./street-lights.js?v=half-density";
 import { addContactShadow } from "./ambient-detail.js";
 import * as THREE from "three";
-import { buildings } from "./campus-data.js?v=handoff-1";
+import { buildings } from "./campus-data.js?v=handoff-4";
 import clip from "../vendor/polygon-clipping/index.js";
 import {
   makeSiteLayout,
@@ -9,7 +9,7 @@ import {
   rectangle,
   stroke,
   area,
-} from "./site-layout.js?v=handoff-1";
+} from "./site-layout.js?v=handoff-4";
 const material = (color, extra = {}) =>
   new THREE.MeshStandardMaterial({ color, roughness: 0.96, ...extra });
 const M = {

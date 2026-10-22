@@ -1,7 +1,7 @@
 import { bakeAmbientDetail, addContactShadow } from "./ambient-detail.js";
 import * as THREE from "three";
 import { en14Parts, en14Garden } from "./en14-layout.js";
-import { palm } from "./model.js";
+import { palm } from "./model.js?v=en16-hall2";
 const mat = (color, extra = {}) =>
   new THREE.MeshStandardMaterial({ color, roughness: 0.86, ...extra });
 const M = {
