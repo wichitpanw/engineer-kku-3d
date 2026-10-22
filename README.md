@@ -1,101 +1,85 @@
-# EN KKU · Faculty Campus Explorer
+# EN KKU · 3D Campus Explorer
 
-Interactive Three.js exterior model of the Faculty of Engineering, Khon Kaen University. Seventeen current building codes are modeled, with geometric roads, pedestrian links, forecourts and planting. The current scene is a progressive architectural reconstruction; geometry and photographic coverage are labelled per building.
+แบบจำลองสามมิติภายนอกของคณะวิศวกรรมศาสตร์ มหาวิทยาลัยขอนแก่น เปิดดูผ่านเว็บเบราว์เซอร์ได้ทันที
+มีอาคาร ถนน ทางเดิน ลานจอดรถ และต้นไม้ของคณะ เลือกดูทีละอาคาร หมุนกล้อง และเดินสำรวจในฉากได้
 
-## Run
+An interactive Three.js exterior model of the Faculty of Engineering, Khon Kaen University.
 
-```powershell
+> โปรเจกต์นี้เป็นงานจำลองเพื่อการเรียนรู้และนำไปต่อยอด ไม่ใช่แบบรังวัดหรือแบบก่อสร้างจริง
+> ตำแหน่งและรูปทรงอ้างอิงภาพถ่ายดาวเทียม Street View และภาพถ่ายภาคสนาม ระยะและความสูงส่วนใหญ่เป็นค่าประมาณ
+
+## เริ่มใช้งาน
+
+ไม่ต้องติดตั้งแพ็กเกจ ใช้แค่ Python (หรือเว็บเซิร์ฟเวอร์ static ตัวใดก็ได้)
+
+```bash
 npm run dev
+# หรือ
+python3 -m http.server 8089
 ```
 
-Open http://localhost:8089/. No package installation is needed for the app. Three.js/OrbitControls are included locally in `vendor/`; the app has no dependency on the former reference checkout.
+แล้วเปิด http://localhost:8089/ (เปิดไฟล์ `index.html` ตรง ๆ ไม่ได้ เพราะใช้ ES modules)
 
-## Explore
+## ทำอะไรได้บ้าง
 
-- Search EN code, Thai/English name or CB. Select from the list, a model surface, floating tag, or the satellite minimap.
-- View the entire faculty, overhead plan, or four sides of a selected building. EN16 also has entrance, public hall and bridge presets.
-- Drag to orbit; wheel to zoom; right-drag to pan. Use the surrounding-building switch to isolate a selected building.
-- Walk: WASD/arrows, drag to look, Shift to move faster, Esc to exit. Floor selection and internal room layouts are outside the current scope.
-- Main terrain is entirely modeled. Satellite imagery appears only in the calibrated minimap, with Esri attribution.
+- ค้นหาอาคารด้วยรหัส EN ชื่อไทย หรือชื่ออังกฤษ แล้วเลือกจากรายการ ป้ายลอย ตัวอาคาร หรือแผนที่เล็ก
+- ดูภาพรวมทั้งคณะ ผังมุมบน มุมสี่ด้าน และมุมกล้องเฉพาะของแต่ละอาคาร
+- ซ่อนอาคารรอบข้างเพื่อดูทีละหลัง
+- เดินสำรวจ: WASD/ลูกศร ลากเมาส์เพื่อมอง Shift เพื่อเร่ง Esc เพื่อออก
+- เปลี่ยนแสงเช้า/เย็น/กลางคืน และโหมดภาพสำหรับบันทึกภาพหน้าจอ
 
-## Structure
+## โครงสร้างโปรเจกต์
 
-- `src/campus-data.js`: registry, identities, multi-part footprints, local/metre geographic transforms, evidence and status. Reference origin: EN16 Maps pin, +X east / -Z north.
-- `src/campus-buildings.js`: independent building models, material batches, near/far LOD and selection outline. Selected buildings always show their detailed geometry.
-- `src/model.js` / `src/entrance.js`: the existing EN16 facade, open hall, cylinders, bridge, broad stairs, landing and rails.
-- `src/en14-building.js` / `src/en14-layout.js`: โมเดลเคมีและพิกัดร่วม
-- `src/en17-building.js`: EN17 Workshop และส่วนต่อ
-- `src/cb-building.js`: EN09 สองปีก โครงเหล็กและโถงบันได
-- `src/en08-layout.js` / `src/en08-building.js`: EN08 อุตสาหการ สองซีก คอร์ทต้นไม้ และสำนักงานภาค
-- `src/en15-layout.js` / `src/en15-building.js`: EN15 ห้องสมุดเก่า หลังคาพับสี่ช่วง ตะแกรงครีบ แผงข้าวหลามตัด และปีกบริการ
-- `src/east-engineering.js`: EN04–EN11 และลานกลาง พร้อมโมดูลหลังคาและต้นไม้เฉพาะพื้นที่.
-- `src/site-layout.js`: ถนนและพื้นส่วนกลางแบบ polygon union พร้อมตรวจการทับซ้อน.
-- `src/terrain.js`: shared campus roads, paths, parking, planting and street details.
-- `src/app.js`: selection/search, cameras, raycasting, labels, minimap, references and exterior walking.
+| ส่วน | หน้าที่ |
+| --- | --- |
+| `index.html`, `styles.css` | หน้าเว็บและ UI |
+| `src/app.js` | การเลือกอาคาร ค้นหา กล้อง ป้าย แผนที่เล็ก และโหมดเดิน |
+| `src/campus-data.js` | ทะเบียนอาคาร รหัส ชื่อ ผังพื้น แหล่งอ้างอิง และการแปลงพิกัด |
+| `src/campus-buildings.js` | รวมโมเดลอาคารทุกหลัง ระดับรายละเอียด (LOD) และกรอบเลือก |
+| `src/*-layout.js` | พิกัดและขนาดของแต่ละอาคาร (แหล่งข้อมูลกลางของอาคารนั้น) |
+| `src/*-building.js` | สร้างรูปทรงสามมิติของแต่ละอาคาร |
+| `src/site-layout.js` | ถนน ทางเดิน ลาน และการตรวจว่าถนนไม่ทับอาคาร |
+| `src/terrain.js` | พื้น ถนน ลานจอด ต้นไม้ และรายละเอียดรอบอาคาร |
+| `vendor/` | Three.js และไลบรารีที่ใช้ (เก็บไว้ในโปรเจกต์ ไม่ต้องดาวน์โหลด) |
+| `assets/` | ภาพแผนที่เล็กและภาพประกอบ |
+| `research/` | สคริปต์ช่วยตรวจผังและงานต้นแบบเก่า |
+| `CONTEXT.md` | บันทึกการพัฒนาแต่ละรอบ สิ่งที่ยืนยันแล้ว และสิ่งที่ยังประมาณ |
 
-## ขั้นตอนการทำงานสร้าง/ปรับปรุงอาคาร (Building Reconstruction Loop)
+ระบบพิกัด: หน่วยเมตร จุดอ้างอิง (0, 0) อยู่ที่ตึกเพียรวิจิตร (EN16) แกน +X ไปทางตะวันออก แกน −Z ไปทางเหนือ แกน Y คือความสูง
 
-ทุกครั้งที่ได้รับคำสั่งจำลองอาคาร Agent ต้องปฏิบัติตาม Pipeline 7 ขั้นตอนนี้อย่างเคร่งครัด:
+## แนวทางพัฒนาต่อ
 
-```mermaid
-flowchart TD
-    A["1. รับ Input (Lat/Long + ภาพดาวเทียม)"] --> B["2. วิเคราะห์ดาวเทียม & สเกลพิกเซล"]
-    B --> C["3. สำรวจ Street View รอบทิศ"]
-    C --> D["4. สกัดภาพถ่ายจริงจากหมุดสถานที่ (Google Maps / Reviews)"]
-    D --> E["5. ขึ้นรูปโมเดล 3D & ผังพิกัดกลาง"]
-    E --> F["6. Recheck รอบทิศ (ผัง + การหัน + การชน)"]
-    F --> G["7. ตรวจสอบระบบ & ส่งมอบ (รอผู้ใช้ตรวจ)"]
-```
+แนวทางที่ใช้เก็บรายละเอียดอาคารทีละหลังมาจนถึงตอนนี้:
 
-### 1. รับข้อมูลนำเข้าจากผู้ใช้ (Input Ingestion)
-- รับพิกัด `latitude, longitude` จาก Google Maps
-- รับภาพถ่ายดาวเทียมระบุขอบเขต/ตำแหน่งอาคารและบริบทโดยรอบ
+1. วาดผังจากภาพดาวเทียมที่ตีตารางเทียบสเกลเมตร
+2. ดูรูปทรง หลังคา จำนวนชั้น วัสดุ และป้าย จาก Street View หรือภาพถ่ายจริงรอบอาคาร
+3. เก็บพิกัดไว้ใน `src/<อาคาร>-layout.js` และสร้างรูปทรงใน `src/<อาคาร>-building.js`
+4. ลงทะเบียนอาคารใน `campus-data.js` และ `campus-buildings.js` แล้วเพิ่มมุมกล้องตามต้องการ
+5. ตรวจให้ถนนไม่ทับอาคาร (`auditSite` ใน `site-layout.js`) และตรวจไวยากรณ์ด้วย `node --check`
+6. บันทึกสิ่งที่ยืนยันแล้วและสิ่งที่ยังประมาณลงใน `CONTEXT.md`
 
-### 2. วิเคราะห์ดาวเทียม & คำนวณสเกลพิกเซล (Aerial & Pixel Calibration)
-- ดึงภาพมุมสูงจากดาวเทียมบริเวณพิกัดที่ระบุ
-- ตีตารางพิกเซลเทียบสเกลจริง (เมตรต่อพิกเซล เช่น `metersPerPixel = 0.572655`)
-- กำหนดแกนพิกัด: Origin ที่ EN16 (`x=0, z=0`), `+X` ตะวันออก, `-Z` เหนือ
-- คำนวณขอบเขตอาคาร (Footprint), ความกว้าง, ความยาว, ทิศทางการวางตัว และคอร์ทกลาง
+ตัวอย่างงานที่ต่อยอดได้ เช่น เก็บรายละเอียดอาคารที่ยังเป็นรูปทรงเบื้องต้น ปรับความสูงและสัดส่วนจากการวัดจริง
+เพิ่มภาพถ่ายประจำอาคาร ทำภายในอาคาร ระบบนำทาง หรือเชื่อมข้อมูลห้องและภาควิชา
 
-### 3. สำรวจ Street View รอบอาคาร (Street View Inspection)
-- เดินสำรวจ Street View ทุกมุมมองรอบอาคารที่เป็นไปได้ (หน้า / หลัง / ซ้าย / ขวา)
-- บันทึกเอกลักษณ์สถาปัตยกรรม: จำนวนชั้น, ครีบบังแดด, ชนิดหลังคา (จั่ว/เรียบ/โค้ง), บันได, ประตู, ซุ้มทางเข้า และวัสดุ/โทนสี
+## ตรวจสอบโค้ด
 
-### 4. ดึงภาพถ่ายจากหมุดสถานที่ประกอบ (Place Photos & User Reviews)
-- สำรวจภาพถ่ายภายนอกที่ผู้ใช้อัปโหลดไว้บนหมุด Google Maps ของสถานที่นั้น
-- เจาะลึกรายละเอียดเฉพาะ: ป้ายชื่ออาคาร/ภาควิชา, แผ่นป้ายเลขตึก, ตราสัญลักษณ์, ซุ้มประตู, ทางลาด และสวนประดับ
-
-### 5. ขึ้นรูปโมเดลและผังพิกัด (3D Modeling & Layout Integration)
-- สร้าง `src/<building>-layout.js`: ใช้เป็นแหล่งพิกัดกลาง (Single Source of Truth) สำหรับชิ้นส่วนอาคาร, ป้าย, ทางเข้า และแนวต้นไม้
-- สร้าง `src/<building>-building.js`: ขึ้นรูปทรงเรขาคณิต (Box, Shape, Extrude) ตามสัดส่วนที่คำนวณได้
-- เชื่อมต่อระบบหลัก: ทะเบียน `src/campus-data.js`, เรนเดอร์ `src/campus-buildings.js`, พลาซ่าทางเดิน `src/site-layout.js`, และแนวกันต้นไม้ `src/terrain.js`
-- เพิ่มปุ่มมุมกล้อง Preset ใน `index.html` และ `src/app.js`
-
-### 6. ตรวจสอบพิกัดและโค้ดอย่างรวดเร็ว (Fast Code & Layout Check)
-- ตรวจสอบพิกัดและการวางตัวของโมเดลจากสมการเรขาคณิตและตารางพิกเซลโดยตรง (งดรันสคริปต์เปิดเบราว์เซอร์แคปภาพอัตโนมัติที่ใช้เวลานาน)
-- รัน `auditSite`: ต้องได้ `conflicts = []` (ถนนไม่ทับอาคาร) และ `roadComponents = 1`
-- รันตรวจสอบโค้ด: `node --check` และ `git diff --check` ต้องผ่าน 100%
-
-### 7. ส่งมอบให้ผู้ใช้ตรวจทันที (Immediate Handoff)
-- บันทึกงานและระบุสิ่งที่ยังเป็นการประมาณลงใน `CONTEXT.md`
-- เปิดเว็บเซิร์ฟเวอร์ Local พอร์ต `8089` (`bind 0.0.0.0`) แล้วส่งลิงก์ให้ผู้ใช้ตรวจภาพจริงผ่านเบราว์เซอร์ได้ทันที
-- **สำคัญ:** ห้าม `git commit` หรือ `git push` จนกว่าจะได้รับคำสั่งยืนยันจากผู้ใช้
-
-## Development checks
-
-```powershell
-node research/check-campus.mjs
+```bash
 node --check src/app.js
-node --check src/campus-buildings.js
-node --check src/campus-data.js
-node --check src/model.js
-node --check src/terrain.js
+node -e "import('./src/site-layout.js').then(S => { const a = S.auditSite(); console.log(a.conflicts, a.roadComponents) })"
 ```
 
-EN09 is the official code; CB is the colloquial name. EN15 is the former library, repurposed for other uses; the present library is at EN18. EN06 is at its original mapped location. Temporary cones, barriers, road closures and event decorations are excluded.
+ผลที่ถูกต้องคือ `[] 1` (ไม่มีถนนทับอาคาร และถนนเชื่อมกันเป็นโครงข่ายเดียว)
 
-Dimensions are estimated from photographs and aerial imagery. EN16/EN18, EN04/EN11 and EN09 have bespoke exterior detail; EN17 has a photo-derived wall facing CB. Unseen faces remain preliminary. A `detail` status indicates additional modeling, not a measured or fully surveyed replica. The prototype does not certify building access or real navigation routes.
+## หมายเหตุและแหล่งข้อมูล
 
-## ไฟทางเท้าและแสง
+- ภาพดาวเทียมในแผนที่เล็ก: Esri, Maxar, Earthstar Geographics and the GIS User Community
+- รูปทรงอาคารอ้างอิงจากการดู Google Maps / Street View และภาพถ่ายภาคสนาม ไม่ได้นำภาพจากแหล่งเหล่านั้นมาเก็บในโปรเจกต์
+- รหัส EN09 เป็นรหัสทางการ (เรียกกันว่า CB); EN15 คือห้องสมุดเดิม ห้องสมุดปัจจุบันอยู่ที่ EN18
+- ไม่รวมสิ่งชั่วคราว เช่น กรวย แผงกั้น หรือของตกแต่งงานกิจกรรม
+- แบบจำลองนี้ไม่ได้รับรองเส้นทางสัญจรหรือการเข้าถึงอาคารจริง
 
-เลือกเช้า / เย็น / กลางคืนในแผง แสงและภาพ ไฟหัวเฟืองตามแนวทางเท้าจะสว่างเฉพาะกลางคืน ตำแหน่งและระยะห่างเป็นแบบจำลอง
+## License
+
+โค้ดของโปรเจกต์นี้ใช้สัญญาอนุญาต [MIT](LICENSE) นำไปใช้ แก้ไข และเผยแพร่ต่อได้ โดยคงข้อความลิขสิทธิ์ไว้
+ไลบรารีใน `vendor/` (Three.js, polygon-clipping) ใช้สัญญาอนุญาตของแต่ละโครงการ
+ภาพดาวเทียมในแผนที่เล็กเป็นของผู้ให้บริการตามที่ระบุไว้ด้านบน
