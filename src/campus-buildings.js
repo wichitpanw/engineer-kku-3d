@@ -2,6 +2,7 @@ import { createAgriculturalMain, createAgriculturalLab, createAgriculturalSite }
 import { createEN18 } from "./en18-building.js?v=en18-20";
 import { createEN08 } from "./en08-building.js?v=en08-7";
 import { createEN15 } from "./en15-building.js?v=en15-2";
+import { createEN06 } from "./en06-building.js?v=en06-2";
 import { createEN01, createEN02 } from "./civil-building.js?v=civil-3";
 import { createMechanicalLab, createMechanicalTeaching, createMechanicalCourt } from "./mechanical-building.js";
 import { createEN13, createEN13Site } from "./en13-building.js";
@@ -10,7 +11,7 @@ import * as THREE from "three";
 import { createCB } from "./cb-building.js";
 import { createEN17 } from "./en17-building.js";
 import { batch } from "./model.js";
-import { buildings, auxiliaries } from "./campus-data.js?v=civil-2";
+import { buildings, auxiliaries } from "./campus-data.js?v=handoff-1";
 import {
   createComputerElectrical,
   createElectricalConnected,
@@ -243,6 +244,7 @@ export function createCampusBuildings(scene, pien) {
       if (b.id === "EN18") createEN18(level, detail);
       else if (b.id === "EN08") createEN08(level, detail);
       else if (b.id === "EN15") createEN15(level, detail);
+      else if (b.id === "EN06") createEN06(level, detail);
       else if (b.id === "EN01") createEN01(level, detail);
       else if (b.id === "EN02") createEN02(level, detail);
       else if (b.id === "EN14") createEN14(level, detail);

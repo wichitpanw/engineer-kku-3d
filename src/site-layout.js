@@ -2,7 +2,7 @@ import { mechanicalGarage } from "./mechanical-layout.js";
 import { en13Site } from "./en13-layout.js";
 import { en14Garden } from "./en14-layout.js";
 import clip from "../vendor/polygon-clipping/index.js";
-import { buildings, auxiliaries } from "./campus-data.js?v=civil-2";
+import { buildings, auxiliaries } from "./campus-data.js?v=handoff-1";
 export const SITE_REFERENCE = {
   originPixel: [458.38674602657557, 650.5646753944457],
   metersPerPixel: 0.57265497771093,
@@ -363,8 +363,9 @@ export const parkingAreas = [
       [91, 28],
     ],
     entry: [
-      [184, 18],
-      [160, 18],
+      // Runs clear of EN06's south wall (z 17.2).
+      [184, 20.5],
+      [160, 20.5],
       [160, 24],
       [131, 24],
     ],

@@ -74,7 +74,8 @@ assert.equal(
   1,
   "all vehicular lanes and parking entries must be connected",
 );
-for (const p of layout.parking) {
+// Lots without their own entry (e.g. PC-FRONT-CHEM, reached from the EN14 drive) are skipped.
+for (const p of layout.parking.filter((p) => layout.driveways.some((d) => d.id === p.id))) {
   const entry = layout.driveways.find((d) => d.id === p.id);
   assert(
     area(clip.intersection(entry.geometry, p.geometry)) > 0.05,

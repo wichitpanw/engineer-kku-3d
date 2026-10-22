@@ -1,12 +1,12 @@
 import { campusPoints } from "./campus-points.js";
-import { photosForBuilding } from "./building-photos.js?v=building-name";
+import { photosForBuilding, loadPhotoManifest } from "./building-photos.js?v=photo-manifest";
 import { createSceneTools } from "./scene-tools.js?v=20261019-tools";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createPienvichit, createEnvironment } from "./model.js";
-import { createTerrain } from "./terrain.js?v=civil-2";
-import { createCampusBuildings } from "./campus-buildings.js?v=civil-3";
-import { buildings, STATUS, CAMPUS_BOUNDS } from "./campus-data.js?v=civil-2";
+import { createTerrain } from "./terrain.js?v=handoff-2";
+import { createCampusBuildings } from "./campus-buildings.js?v=handoff-2";
+import { buildings, STATUS, CAMPUS_BOUNDS } from "./campus-data.js?v=handoff-1";
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)];
 const escapeHTML = (s) =>
@@ -213,7 +213,7 @@ async function start() {
     $("#referenceCount").textContent = "";
     showReference();
   }
-  function showReference() {
+  function showReference(force = false) {
     const request = ++photoRequest;
     const p = currentPhotos[0],
       img = $("#referenceImage"),
@@ -225,32 +225,26 @@ async function start() {
     $("#referenceTitle").textContent = p?.title || "ภาพจริงของอาคาร";
     $("#referenceDescription").textContent =
       p?.description || "เลือกรหัสอาคารจากแท็บสำรวจอาคาร";
-    $("#referencePath").textContent = p ? p.file.replace("assets/", "") : "";
+    $("#referencePath").textContent = p ? `building-photos/${p.id}.jpg` : "";
     $("#referenceMissingText").textContent = p
       ? "ยังไม่มีภาพสำหรับอาคารนี้"
       : "ยังไม่ได้เลือกอาคาร";
     if (!p) return;
     img.alt = p.title;
-    let extension = 0;
-    const base = p.file.replace(/\.(jpg|png|webp)$/i, ""),
-      types = ["jpg", "png", "webp"];
-    function load() {
-      if (request !== photoRequest) return;
+    loadPhotoManifest(force).then((files) => {
+      const file = files[p.id];
+      if (request !== photoRequest || !file) return;
+      $("#referencePath").textContent = `building-photos/${file}`;
       img.onload = () => {
         if (request !== photoRequest) return;
         img.hidden = false;
         open.disabled = false;
         $("#referenceMissing").hidden = true;
       };
-      img.onerror = () => {
-        if (request !== photoRequest) return;
-        if (++extension < types.length) load();
-      };
-      img.src = `${base}.${types[extension]}?v=${Date.now()}`;
-    }
-    load();
+      img.src = `assets/building-photos/${file}?v=${Date.now()}`;
+    });
   }
-  $("#referenceReload").addEventListener("click", () => showReference());
+  $("#referenceReload").addEventListener("click", () => showReference(true));
   $("#referenceOpen").addEventListener("click", () => {
     const p = currentPhotos[0];
     if (!p || $("#referenceImage").hidden) return;

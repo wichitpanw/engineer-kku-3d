@@ -41,7 +41,7 @@ python3 -m http.server 8089
 | `src/site-layout.js` | ถนน ทางเดิน ลาน และการตรวจว่าถนนไม่ทับอาคาร |
 | `src/terrain.js` | พื้น ถนน ลานจอด ต้นไม้ และรายละเอียดรอบอาคาร |
 | `vendor/` | Three.js และไลบรารีที่ใช้ (เก็บไว้ในโปรเจกต์ ไม่ต้องดาวน์โหลด) |
-| `assets/` | ภาพแผนที่เล็กและภาพประกอบ |
+| `assets/` | ภาพแผนที่เล็กและภาพประกอบ (รูปจริงประจำอาคารวางใน `assets/building-photos/` และลงชื่อใน `photos.json`) |
 | `research/` | สคริปต์ช่วยตรวจผังและงานต้นแบบเก่า |
 | `CONTEXT.md` | บันทึกการพัฒนาแต่ละรอบ สิ่งที่ยืนยันแล้ว และสิ่งที่ยังประมาณ |
 
@@ -65,6 +65,8 @@ python3 -m http.server 8089
 
 ```bash
 node --check src/app.js
+node research/check-campus.mjs
+node research/check-site-layout.mjs
 node -e "import('./src/site-layout.js').then(S => { const a = S.auditSite(); console.log(a.conflicts, a.roadComponents) })"
 ```
 

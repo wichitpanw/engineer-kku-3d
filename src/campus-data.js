@@ -6,7 +6,8 @@ import { en17FlatParts, en17Garage, en17EastWing } from "./en17-layout.js";
 import { en18Footprint, en18Center } from "./en18-layout.js?v=en18-20";
 import { en08Parts } from "./en08-layout.js?v=en08-6";
 import { en15Parts } from "./en15-layout.js?v=en15-1";
-import { en01Parts, en02Parts } from "./civil-layout.js?v=civil-2";
+import { en06Parts } from "./en06-layout.js?v=en06-1";
+import { en01Parts, en02Parts } from "./civil-layout.js?v=handoff-1";
 // Shared campus registry. Metres, +X east, -Z north; origin is EN16.
 // Footprints traced from the supplied enmap sheets and the inspected Maps aerial.
 // Heights and offsets are estimates, never a surveyed CAD dataset.
@@ -121,11 +122,13 @@ export const buildings = [
     "ปฏิบัติการวิศวกรรมสิ่งแวดล้อม",
     "Environmental Engineering Laboratories",
     "south",
-    [part(145, 3, 23, 31, 10, "barrel")],
+    en06Parts,
     {
       phase: 4,
+      status: "detail",
+      capture: "ภาพดาวเทียม Google z19 / Street View ถนนตะวันออก พ.ค. 2019",
       confidence:
-        "ผู้ใช้ยืนยัน EN06 อยู่ตำแหน่งเดิมตามผัง; สัดส่วนและหน้าต่างยังประมาณ",
+        "โรงหลังคาโค้งแนวเหนือ–ใต้พร้อมโครงโค้งและอาคารเล็กด้านตะวันออกตามดาวเทียม (ขยับจากผังเดิมไปทางตะวันออก ~11 ม.); Street View ต้นไม้บังเกือบหมด ผนัง ประตู หน้าต่าง และความสูงประมาณ",
       sources: ["enmap1", "enmap2", "enmap3", "maps-aerial", "user-en06"],
     },
   ),
@@ -135,7 +138,7 @@ export const buildings = [
     "Mechanical Engineering Laboratories",
     "west",
     mechanicalLabParts,
-    { phase: 5, confidence: "หลังคาโค้งสี่ช่วงและแนวหมุนเทียบ Google Earth; หน้าต่างสองชั้น ประตูม้วนและแอร์ฝั่งถนนตามภาพผู้ใช้; ระยะประมาณ", capture: "ภาพดาวเทียมผู้ใช้ 19 ต.ค. 2026" },
+    { phase: 5, status: "detail", confidence: "หลังคาโค้งสี่ช่วงและแนวหมุนเทียบ Google Earth; หน้าต่างสองชั้น ประตูม้วนและแอร์ฝั่งถนนตามภาพผู้ใช้; ระยะประมาณ", capture: "ภาพดาวเทียมผู้ใช้ 19 ต.ค. 2026" },
   ),
   base(
     "EN08",
@@ -182,7 +185,7 @@ export const buildings = [
     "Mechanical Engineering",
     "west",
     mechanicalTeachingParts,
-    { phase: 5, confidence: "อาคารสามชั้น ระเบียงชมพู ป้ายหิน สวนและชิ้นงานเครื่องกลอ้างอิงภาพผู้ใช้ 8 ภาพ; ผังและทิศทางเทียบดาวเทียม ระยะและการแบ่งรหัสอาคารย่อยยังประมาณ", mapPin: { latitude: 16.473071798306023, longitude: 102.82212596202064 } },
+    { phase: 5, status: "detail", confidence: "อาคารสามชั้น ระเบียงชมพู ป้ายหิน สวนและชิ้นงานเครื่องกลอ้างอิงภาพผู้ใช้ 8 ภาพ; ผังและทิศทางเทียบดาวเทียม ระยะและการแบ่งรหัสอาคารย่อยยังประมาณ", mapPin: { latitude: 16.473071798306023, longitude: 102.82212596202064 } },
   ),
   base(
     "EN11",
@@ -252,7 +255,7 @@ export const buildings = [
       phase: 5,
       status: "detail",
       aliases: ["library", "ห้องสมุดเก่า", "aris", "วิศวกรรมการผลิตขั้นสูง"],
-      usage: "ห้องสมุดเดิม · หมุด Google Maps: ARIS และวิศวกรรมการผลิตขั้นสูง · ห้องสมุดย้ายไป EN18",
+      usage: "ห้องสมุดเดิม ปัจจุบันใช้งานอื่น · หมุด Google Maps: ARIS และวิศวกรรมการผลิตขั้นสูง · ห้องสมุดย้ายไป EN18",
       capture: "ภาพดาวเทียม Google / Street View ถนนด้านเหนือ",
       confidence:
         "หลังคาพับสี่ช่วงแนวเหนือ–ใต้ ผังปีกข้างตามดาวเทียม; ตะแกรงครีบคอนกรีต แผงข้าวหลามตัด กระจกตัวอักษร ENGINEERING LIBRARY และปีกบริการสีขาวพร้อมบันไดนอกตาม Street View ด้านเหนือ/ตะวันออก; ด้านใต้และความสูงประมาณ",
