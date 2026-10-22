@@ -4,7 +4,9 @@ import { en13Parts } from "./en13-layout.js";
 import { en14Parts } from "./en14-layout.js";
 import { en17FlatParts, en17Garage, en17EastWing } from "./en17-layout.js";
 import { en18Footprint, en18Center } from "./en18-layout.js?v=en18-20";
-import { en08Parts } from "./en08-layout.js?v=en08-1";
+import { en08Parts } from "./en08-layout.js?v=en08-6";
+import { en15Parts } from "./en15-layout.js?v=en15-1";
+import { en01Parts, en02Parts } from "./civil-layout.js?v=civil-2";
 // Shared campus registry. Metres, +X east, -Z north; origin is EN16.
 // Footprints traced from the supplied enmap sheets and the inspected Maps aerial.
 // Heights and offsets are estimates, never a surveyed CAD dataset.
@@ -55,20 +57,32 @@ export const buildings = [
     "วิศวกรรมโยธา",
     "Civil Engineering",
     "north",
-    [
-      part(30, -154, 84, 16, 12),
-      part(31, -133, 14, 24, 9),
-      part(35, -126, 38, 18, 9),
-    ],
-    { aliases: ["โยธา", "civil"], phase: 2 },
+    en01Parts,
+    {
+      aliases: ["โยธา", "civil", "ศูนย์อาหาร", "canteen"],
+      phase: 2,
+      status: "detail",
+      usage: "ภาควิชาวิศวกรรมโยธา · ปีกยาวริมถนนเหนือ · ศูนย์อาหารวิศวกรรมศาสตร์ (Cafe Engineering KKU)",
+      capture: "ภาพดาวเทียม Google / Street View พ.ค. 2019 (สวนด้านเหนือ) และ เม.ย. 2014 (ถนนใน)",
+      confidence:
+        "ผังปีกสองชั้นหลังคาจั่วขาวเรียงแนวเหนือ–ใต้ ทางเชื่อม อาคารเตี้ย และศูนย์อาหารหลังคาปั้นหยาสีเข้มตามดาวเทียม; ความสูง หน้าต่าง และด้านที่ไม่มีภาพยังประมาณ",
+      sources: ["maps-aerial", "civil-street"],
+    },
   ),
   base(
     "EN02",
     "ปฏิบัติการวิศวกรรมโยธา",
     "Civil Engineering Laboratories",
     "north",
-    [part(95, -59, 102, 48, 9, "sheds")],
-    { phase: 2 },
+    en02Parts,
+    {
+      phase: 2,
+      status: "detail",
+      capture: "ภาพดาวเทียม Google / Street View ถนนตะวันออก พ.ค. 2019",
+      confidence:
+        "โรงปฏิบัติการโครงเหล็กหลังคาจั่วสันตะวันออก–ตะวันตกพร้อมช่องแสงสันหลังคา ผนังระแนงสีครีม หลังคาจอดรถ และหอถังน้ำโครงแดงด้านตะวันออกตาม Street View; ด้านเหนือ/ใต้และความสูงประมาณ",
+      sources: ["maps-aerial", "civil-street"],
+    },
   ),
   base(
     "EN04",
@@ -233,14 +247,16 @@ export const buildings = [
     "ห้องสมุดเก่า",
     "Former Engineering Library",
     "central",
-    [part(62, -2, 43, 29, 10, "barrel")],
+    en15Parts,
     {
-      phase: 1,
-      aliases: ["library", "ห้องสมุดเก่า"],
-      usage: "ห้องสมุดเดิม · ปัจจุบันใช้งานอื่น · ห้องสมุดย้ายไป EN18",
+      phase: 5,
+      status: "detail",
+      aliases: ["library", "ห้องสมุดเก่า", "aris", "วิศวกรรมการผลิตขั้นสูง"],
+      usage: "ห้องสมุดเดิม · หมุด Google Maps: ARIS และวิศวกรรมการผลิตขั้นสูง · ห้องสมุดย้ายไป EN18",
+      capture: "ภาพดาวเทียม Google / Street View ถนนด้านเหนือ",
       confidence:
-        "ผู้ใช้ยืนยันว่าเลิกใช้เป็นห้องสมุดและนำอาคารไปใช้งานอื่นแล้ว; หมุด Google Maps ระบุ ARIS; รูปหลังคาและที่ตั้งเทียบผัง; ภาพด้านข้างยังไม่ครบ",
-      sources: ["enmap1", "enmap3", "maps-aerial", "user-library"],
+        "หลังคาพับสี่ช่วงแนวเหนือ–ใต้ ผังปีกข้างตามดาวเทียม; ตะแกรงครีบคอนกรีต แผงข้าวหลามตัด กระจกตัวอักษร ENGINEERING LIBRARY และปีกบริการสีขาวพร้อมบันไดนอกตาม Street View ด้านเหนือ/ตะวันออก; ด้านใต้และความสูงประมาณ",
+      sources: ["enmap1", "maps-aerial", "user-library"],
     },
   ),
   base(
@@ -349,18 +365,8 @@ export const buildings = [
     },
   ),
 ];
-export const auxiliaries = [
-  {
-    id: "CAF01",
-    name: "โรงอาหาร / พื้นที่บริการ",
-    parts: [part(69, -120, 36, 28, 6, "sheds")],
-  },
-  {
-    id: "SERVICE01",
-    name: "อาคารประกอบด้านเหนือ",
-    parts: [part(12, -125, 18, 12, 5)],
-  },
-];
+// The canteen and the service block north of EN18 are modelled inside EN01 (civil-layout.js).
+export const auxiliaries = [];
 export const sourceCatalog = {
   "agri-photos": { label: "Google Maps · วิศวกรรมเกษตร · ภาพ มิ.ย. 2019 และ Street View พ.ค. 2019", url: "https://www.google.com/maps?cid=15457346161125191344" },
   "user-en17-name": {
@@ -388,6 +394,10 @@ export const sourceCatalog = {
   "east-street": {
     label: "Google Street View · ลานไฟฟ้า–คอมพิวเตอร์ · พ.ค. 2019",
     url: "https://www.google.com/maps/@?api=1&map_action=pano&pano=9hjibyR49b3Xp723NuLXTg&heading=45&pitch=0",
+  },
+  "civil-street": {
+    label: "Google Street View · ถนนตะวันออก EN02 / หอถังน้ำ · พ.ค. 2019",
+    url: "https://www.google.com/maps/@?api=1&map_action=pano&pano=jHPcRRqaZjnQgZam4Pbr5A&heading=270&pitch=0",
   },
   "east-gallery": {
     label: "Google Maps · ภาควิชาไฟฟ้า · ภาพ ก.ย. 2018 / มิ.ย. 2019",

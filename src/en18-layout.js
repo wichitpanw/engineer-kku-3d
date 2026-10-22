@@ -41,7 +41,7 @@ export const en18SolarWing = {
   innerCorner: [-6.0, -104.0], // meets C_NE of Main Block
   spineSE: [18.5, -68.4],      // meets C_SE of Main Block
   eastEave: [15.5, -96.0],     // clear of EN01 (x >= 16)
-  neMidEave: [2.6, -118.5],    // clear of SERVICE01 (x >= 3, z <= -119)
+  neMidEave: [2.6, -118.5],    // clear of the EN01 department wing (x >= 16)
   northEave: [0.5, -125.5],
   // Google satellite 2026 (near-orthographic): the prow tip is the NW-most corner; the north face
   // runs east from it, there is no wall continuing north-west past the tip.

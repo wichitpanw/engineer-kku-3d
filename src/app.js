@@ -4,9 +4,9 @@ import { createSceneTools } from "./scene-tools.js?v=20261019-tools";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createPienvichit, createEnvironment } from "./model.js";
-import { createTerrain } from "./terrain.js?v=en08-1";
-import { createCampusBuildings } from "./campus-buildings.js?v=en08-3";
-import { buildings, STATUS, CAMPUS_BOUNDS } from "./campus-data.js?v=en08-1";
+import { createTerrain } from "./terrain.js?v=civil-2";
+import { createCampusBuildings } from "./campus-buildings.js?v=civil-3";
+import { buildings, STATUS, CAMPUS_BOUNDS } from "./campus-data.js?v=civil-2";
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)];
 const escapeHTML = (s) =>
@@ -404,6 +404,8 @@ async function start() {
     $$("[data-mechanical]").forEach(e => e.hidden = !["EN07", "EN10"].includes(id));
     $$("[data-en18]").forEach(e => e.hidden = id !== "EN18");
     $$("[data-en08]").forEach(e => e.hidden = id !== "EN08");
+    $$("[data-en15]").forEach(e => e.hidden = id !== "EN15");
+    $$("[data-civil]").forEach(e => e.hidden = !["EN01", "EN02"].includes(id));
     $("#miniSelected").textContent = id;
     for (const [key, e] of labelElements)
       e.classList.toggle("selected", key === id);
@@ -452,7 +454,24 @@ async function start() {
       const presets = {
         "en08-office": [[-38, 2.2, 30], [-62, 4, 33], 66],
         "en08-south": [[-168, 2.0, 70], [-122, 5, 48], 62],
+        "en08-letters": [[-161, 2.0, 66], [-141, 4.5, 51], 62],
         "en08-top": [[-100, 150, 33], [-100, 0, 32.5], 46],
+      };
+      if (presets[name]) fly(...presets[name]);
+    } else if (selected?.id === "EN15" && name.startsWith("en15-")) {
+      const presets = {
+        "en15-north": [[46, 1.8, -31], [64, 7, -15], 68],
+        "en15-east": [[93, 1.8, -28], [74, 8, -6], 70],
+        "en15-south": [[66, 3, 32], [61, 7, 0], 62],
+        "en15-top": [[63, 130, -2], [63, 0, -2.5], 42],
+      };
+      if (presets[name]) fly(...presets[name]);
+    } else if (["EN01", "EN02"].includes(selected?.id) && name.startsWith("civil-")) {
+      const presets = {
+        "civil-north": [[22, 2.2, -186], [30, 5, -156], 64],
+        "civil-canteen": [[44, 1.8, -96.5], [64, 3.5, -118], 66],
+        "civil-en02-east": [[166, 2.0, -58], [130, 4.5, -62], 66],
+        "civil-top": [[65, 210, -98], [65, 0, -99], 48],
       };
       if (presets[name]) fly(...presets[name]);
     } else if (selected?.id === "EN18" && name.startsWith("en18-")) {

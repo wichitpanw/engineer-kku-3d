@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { en08Parts, en08Site } from "./en08-layout.js?v=en08-1";
+import { en08Parts, en08Site } from "./en08-layout.js?v=en08-6";
 const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.86, ...extra });
 const M = {
   render: mat("#e2d6c4"), pink: mat("#d9a99a"), band: mat("#cf9784"), concrete: mat("#c3c1b4"),
@@ -75,7 +75,7 @@ function bandWing(p, s, detail) {
   shortFaces(p, s, [4.6]);
   // Red department lettering on the ground-floor fascia facing Wittayawattana Rd.
   if (detail && s.id === "west-south")
-    label(p, "ภาควิชาวิศวกรรมอุตสาหการ", s.x + s.w / 2 - 7, 3.55, s.z + s.d / 2 + 0.2, 11, 0.42, "#b0332b");
+    for (let x = s.x - s.w / 2 + 0.6; x < s.x + s.w / 2 - 0.5; x += 1.3) box(p, x, 0.45, s.z + s.d / 2 + 0.9, 1.25, 0.8, 0.9, M.leaf);
 }
 function brickHall(p, s, detail) {
   box(p, s.x, s.h / 2, s.z, s.w - 0.4, s.h, s.d - 0.4, M.brick);
@@ -96,13 +96,41 @@ function pinkWing(p, s, detail) {
   box(p, s.x, s.h + 0.05, s.z, s.w + 2.2, 0.18, s.d + 2.2, M.render);
 }
 function endBlock(p, s, detail) {
-  box(p, s.x, s.h / 2, s.z, s.w - 0.2, s.h, s.d - 0.2, M.render);
+  // Three-storey SW corner block: the two-storey band treatment continues below a third floor.
+  const xw = s.x - s.w / 2, zs = s.z + s.d / 2;
+  box(p, s.x, s.h / 2, s.z, s.w - 0.4, s.h, s.d - 0.4, M.render);
   box(p, s.x, s.h + 0.25, s.z, s.w, 0.5, s.d, M.concrete);
-  box(p, s.x, 3.55, s.z, s.w + 0.2, 0.45, s.d + 0.2, M.band);
+  for (const y of [3.6, 7.6]) box(p, s.x, y, s.z, s.w + 0.3, 0.75, s.d + 0.3, M.band);
+  longFaces(p, s, [4.6, 8.4], { mullions: detail, ac: detail });
+  // West face: second-floor band only; the third floor is a plain wall toward the driveway.
+  box(p, xw - 0.05, 5.35, s.z - 1, 0.08, 1.4, s.d - 4, M.glass);
   if (detail) {
-    // Vertical "INDUSTRIAL ENGINEERING" lettering on the west-facing end wall.
-    const c = label(p, "INDUSTRIAL ENGINEERING", s.x - s.w / 2 - 0.06, 5.2, s.z + 4.5, 5.2, 0.5, "#a0312a", "700 76px", -Math.PI / 2);
-    c.rotation.z = Math.PI / 2;
+    for (let y = 0.9; y < 3.1; y += 0.32) box(p, xw - 0.3, y, s.z - 1, 0.16, 0.07, s.d - 4, M.louver);
+    label(p, "ภาควิชาวิศวกรรมอุตสาหการ", xw - 0.22, 3.6, s.z - 1.5, 8.5, 0.6, "#b0332b", "700 76px", -Math.PI / 2);
+  }
+  // Two pilasters at the SW corner of the west face carry vertical red lettering,
+  // "DEPARTMENT OF" / "INDUSTRIAL ENGINEERING", read top to bottom.
+  for (const [dz, text] of [[-0.35, "INDUSTRIAL ENGINEERING"], [-0.95, "DEPARTMENT OF"]]) {
+    box(p, xw - 0.18, 3.9, zs + dz, 0.45, 7.6, 0.5, M.render);
+    if (detail) {
+      const t = label(p, text, xw - 0.42, 4.6, zs + dz, 4.4, 0.36, "#b0332b", text.length < 16 ? "700 150px" : "700 112px", -Math.PI / 2);
+      t.rotation.z = -Math.PI / 2;
+    }
+  }
+  // South-face entrance: raised floor, steps, glazed doors and the orange department board.
+  const ex = s.x + 2;
+  for (let i = 0; i < 5; i++) box(p, ex, 0.1 + i * 0.16, zs + 2.4 - i * 0.38, 6.2, 0.2 + i * 0.16, 0.4, M.concrete);
+  box(p, ex, 1.7, zs + 0.06, 3.6, 2.6, 0.08, M.glass);
+  box(p, ex + 3.6, 1.4, zs + 0.06, 2.4, 2.4, 0.08, M.louver);
+  box(p, ex, 3.6, zs + 0.3, 6, 0.95, 0.12, M.orange);
+  if (detail) {
+    label(p, "ภาควิชาวิศวกรรมอุตสาหการ", ex, 3.75, zs + 0.37, 5.6, 0.5, "#ffffff", "700 76px");
+    label(p, "DEPARTMENT OF INDUSTRIAL ENGINEERING", ex, 3.35, zs + 0.37, 5.6, 0.26, "#ffffff", "600 76px");
+    for (let x = s.x - s.w / 2 + 0.6; x < ex - 3.4; x += 1.3) box(p, x, 0.45, zs + 0.9, 1.25, 0.8, 0.9, M.leaf);
+    for (let z = s.z - s.d / 2 + 0.8; z < zs - 2; z += 1.3) box(p, xw - 0.9, 0.45, z, 0.9, 0.8, 1.25, M.leaf);
+    // Blue parking sign on the apron at the corner.
+    box(p, xw - 2.5, 1.1, zs + 1.5, 0.07, 2.2, 0.07, M.frame);
+    box(p, xw - 2.54, 2.0, zs + 1.5, 0.04, 0.6, 0.5, mat("#2b5fa8"));
   }
 }
 function office(p, s, detail) {

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import clip from "../vendor/polygon-clipping/index.js";
 import { en17FlatParts, en17Garage, en17EastWing } from "./en17-layout.js";
-import { rectangle } from "./site-layout.js?v=roads-1";
+import { rectangle } from "./site-layout.js?v=civil-2";
 const material = (color, extra = {}) =>
   new THREE.MeshStandardMaterial({ color, roughness: 0.85, ...extra });
 const M = {

@@ -1,7 +1,7 @@
 import { createStreetLights } from "./street-lights.js?v=half-density";
 import { addContactShadow } from "./ambient-detail.js";
 import * as THREE from "three";
-import { buildings } from "./campus-data.js?v=en08-1";
+import { buildings } from "./campus-data.js?v=civil-2";
 import clip from "../vendor/polygon-clipping/index.js";
 import {
   makeSiteLayout,
@@ -9,7 +9,7 @@ import {
   rectangle,
   stroke,
   area,
-} from "./site-layout.js?v=roads-1";
+} from "./site-layout.js?v=civil-2";
 const material = (color, extra = {}) =>
   new THREE.MeshStandardMaterial({ color, roughness: 0.96, ...extra });
 const M = {
@@ -781,7 +781,8 @@ export function createTerrain(scene) {
       const inEN13Garden = xx > 60 && xx < 180 && zz > 40 && zz < 94;
       // EN08 courts are planted explicitly by its own model.
       const inEN08 = xx > -150 && xx < -52 && zz > 6 && zz < 58;
-      const nearMechanicalRoof = xx > -220 && xx < -100 && zz > -145 && zz < 35 &&
+      // Keep crowns off the mechanical roofs, EN15's vaults and side wings, and the EN01/EN02 roofs.
+      const nearMechanicalRoof = ((xx > -220 && xx < -100 && zz > -145 && zz < 35) || (xx > 33 && xx < 96 && zz > -24 && zz < 18) || (xx > -16 && xx < 150 && zz > -168 && zz < -28)) &&
         layout.footprints.some(f => f.geometry.some(poly => poly[0].some((a, i, ring) => {
           const b = ring[(i+1)%ring.length], dx=b[0]-a[0], dz=b[1]-a[1];
           const t=Math.max(0,Math.min(1,((xx-a[0])*dx+(zz-a[1])*dz)/(dx*dx+dz*dz || 1)));

@@ -27,6 +27,7 @@ Open http://localhost:8089/. No package installation is needed for the app. Thre
 - `src/en17-building.js`: EN17 Workshop และส่วนต่อ
 - `src/cb-building.js`: EN09 สองปีก โครงเหล็กและโถงบันได
 - `src/en08-layout.js` / `src/en08-building.js`: EN08 อุตสาหการ สองซีก คอร์ทต้นไม้ และสำนักงานภาค
+- `src/en15-layout.js` / `src/en15-building.js`: EN15 ห้องสมุดเก่า หลังคาพับสี่ช่วง ตะแกรงครีบ แผงข้าวหลามตัด และปีกบริการ
 - `src/east-engineering.js`: EN04–EN11 และลานกลาง พร้อมโมดูลหลังคาและต้นไม้เฉพาะพื้นที่.
 - `src/site-layout.js`: ถนนและพื้นส่วนกลางแบบ polygon union พร้อมตรวจการทับซ้อน.
 - `src/terrain.js`: shared campus roads, paths, parking, planting and street details.

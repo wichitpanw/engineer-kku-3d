@@ -1,6 +1,8 @@
 import { createAgriculturalMain, createAgriculturalLab, createAgriculturalSite } from "./agricultural-building.js";
 import { createEN18 } from "./en18-building.js?v=en18-20";
-import { createEN08 } from "./en08-building.js?v=en08-3";
+import { createEN08 } from "./en08-building.js?v=en08-7";
+import { createEN15 } from "./en15-building.js?v=en15-2";
+import { createEN01, createEN02 } from "./civil-building.js?v=civil-3";
 import { createMechanicalLab, createMechanicalTeaching, createMechanicalCourt } from "./mechanical-building.js";
 import { createEN13, createEN13Site } from "./en13-building.js";
 import { createEN14 } from "./en14-building.js";
@@ -8,7 +10,7 @@ import * as THREE from "three";
 import { createCB } from "./cb-building.js";
 import { createEN17 } from "./en17-building.js";
 import { batch } from "./model.js";
-import { buildings, auxiliaries } from "./campus-data.js?v=en08-1";
+import { buildings, auxiliaries } from "./campus-data.js?v=civil-2";
 import {
   createComputerElectrical,
   createElectricalConnected,
@@ -160,7 +162,7 @@ function roof(p, w, d, eave, form, material = M.roof) {
     beam(p, [-w / 2, eave + r, z], [w / 2, eave + r, z], 0.11, 0.11, M.edge);
   }
 }
-function genericPart(root, s, detail, id) {
+function genericPart(root, s, detail) {
   const w = s.w - 0.8,
     d = s.d - 0.8;
   const p = new THREE.Group();
@@ -168,22 +170,13 @@ function genericPart(root, s, detail, id) {
   p.rotation.y = s.rotation || 0;
   root.add(p);
   const shed = s.roof === "sheds",
-    library = id === "EN15",
     h = s.h;
   box(p, 0, 0.13, 0, w + 0.8, 0.26, d + 0.8, M.base);
-  box(p, 0, h / 2, 0, w, h, d, library ? M.white : M.wall);
+  box(p, 0, h / 2, 0, w, h, d, M.wall);
   box(p, 0, 0.65, 0, w + 0.06, 0.85, d + 0.06, M.base);
-  const roofMat = library ? M.metal : shed ? M.roof : M.roof;
-  if (library) {
-    for (let k = 0; k < 4; k++) {
-      const segment = new THREE.Group();
-      segment.position.x = -w / 2 + ((k + 0.5) * w) / 4;
-      p.add(segment);
-      roof(segment, w / 4 + 0.12, d + 1.3, h + 0.2, "barrel", M.roof);
-    }
-  } else roof(p, w + 0.8, d + 0.8, h + 0.2, s.roof, roofMat);
+  roof(p, w + 0.8, d + 0.8, h + 0.2, s.roof, M.roof);
   if (!detail) return;
-  const floors = shed || library ? 2 : Math.max(1, Math.round(h / 3.5));
+  const floors = shed ? 2 : Math.max(1, Math.round(h / 3.5));
   for (let f = 0; f < floors; f++) {
     const y = 1.7 + f * (h / floors),
       wh = Math.min(1.7, h / floors - 1.1);
@@ -224,13 +217,6 @@ function genericPart(root, s, detail, id) {
   if (shed)
     for (let x = -w / 2 + 0.8; x < w / 2; x += 6)
       box(p, x, h / 2, d / 2 + 0.12, 0.3, h, 0.3, M.white);
-  if (library) {
-    for (const side of [-1, 1]) {
-      box(p, 0, 4.2, side * (d / 2 + 0.1), w - 3, 4.8, 0.12, M.glass);
-      for (let x = -w / 2 + 1; x < w / 2; x += 3)
-        box(p, x, 4.5, side * (d / 2 + 0.22), 0.22, 8.6, 0.24, M.white);
-    }
-  }
 }
 
 export function createCampusBuildings(scene, pien) {
@@ -256,6 +242,9 @@ export function createCampusBuildings(scene, pien) {
       const level = new THREE.Group();
       if (b.id === "EN18") createEN18(level, detail);
       else if (b.id === "EN08") createEN08(level, detail);
+      else if (b.id === "EN15") createEN15(level, detail);
+      else if (b.id === "EN01") createEN01(level, detail);
+      else if (b.id === "EN02") createEN02(level, detail);
       else if (b.id === "EN14") createEN14(level, detail);
       else if (b.id === "EN13") createEN13(level, detail);
       else if (b.id === "EN05") createAgriculturalMain(level, detail);
@@ -267,7 +256,7 @@ export function createCampusBuildings(scene, pien) {
         createEN17(level, detail);
       } else if (b.id === "EN04") createComputerElectrical(level, detail);
       else if (b.id === "EN11") createElectricalConnected(level, detail);
-      else for (const s of b.parts) genericPart(level, s, detail, b.id);
+      else for (const s of b.parts) genericPart(level, s, detail);
       batch(level);
       level.position.set(-b.center[0], 0, -b.center[1]);
       group.addLevel(level, distance);
@@ -286,7 +275,7 @@ export function createCampusBuildings(scene, pien) {
   const eastCourt = createEastCourtyard(services);
   batch(eastCourt);
   for (const b of auxiliaries)
-    for (const p of b.parts) genericPart(services, p, true, b.id);
+    for (const p of b.parts) genericPart(services, p, true);
   batch(services);
   const outline = new THREE.LineLoop(
     new THREE.BufferGeometry(),

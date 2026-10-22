@@ -2,7 +2,7 @@ import { mechanicalGarage } from "./mechanical-layout.js";
 import { en13Site } from "./en13-layout.js";
 import { en14Garden } from "./en14-layout.js";
 import clip from "../vendor/polygon-clipping/index.js";
-import { buildings, auxiliaries } from "./campus-data.js?v=en08-1";
+import { buildings, auxiliaries } from "./campus-data.js?v=civil-2";
 export const SITE_REFERENCE = {
   originPixel: [458.38674602657557, 650.5646753944457],
   metersPerPixel: 0.57265497771093,
@@ -478,64 +478,30 @@ export const parkingAreas = [
     ],
   },
 ];
+// Covered walks follow the roof strips the user traced on Google satellite (21 Oct 2026),
+// offset 1.5 m clear of the adjacent road edge. Steel posts, flat metal roof (Street View).
+const walk = (id, covered, width, points) => ({ id, covered, width, points });
 export const pedestrianLinks = [
-  {
-    id: "west-front-north",
-    covered: true,
-    width: 2.65,
-    points: [
-      [-40, -42],
-      [-40, -9],
-    ],
-  },
-  {
-    id: "anniversary-front",
-    covered: false,
-    width: 2.4,
-    points: [
-      [-41.5, -170],
-      [-41.5, -84],
-      [-41, -51],
-      [-40, -42],
-    ],
-  },
-  {
-    id: "west-front-south",
-    covered: false,
-    width: 2.65,
-    points: [
-      [-37.5, 18],
-      [-38.5, 33],
-      [-37.5, 43],
-      [-32.5, 56],
-      [-27, 67],
-      [-16, 78],
-    ],
-  },
-  {
-    id: "south-covered-link",
-    covered: true,
-    width: 2.5,
-    points: [
-      [28, 24],
-      [42, 28],
-      [72, 30],
-      [133, 30],
-      [173, 30],
-    ],
-  },
-  {
-    id: "outer-west-path",
-    covered: false,
-    width: 2,
-    points: [
-      [-60, -130],
-      [-60, -40],
-      [-61, 15],
-      [-56, 39],
-      [-44, 60],
-    ],
-  },
+  walk("west-front-north", true, 2.5, [[-41.8, -46], [-41.3, -20], [-40.8, -6]]),
+  walk("anniversary-front", false, 2.4, [[-41.5, -170], [-41.5, -84], [-41, -51], [-40, -42]]),
+  // Inner side of the loop along the EN14 front.
+  walk("west-front-south-covered", true, 2.5, [[-40.4, 15], [-39.8, 22.8], [-38.8, 39.3], [-35.6, 53]]),
+  walk("west-front-south", false, 2.65, [[-35.6, 53], [-32.5, 56], [-27, 67], [-16, 78]]),
+  // Outer side of the south-west curve towards the south road.
+  walk("south-west-curve", true, 2.5, [[-44.3, 57], [-34.8, 73.9], [-20.8, 87.9], [-6, 95.6]]),
+  // Three runs on the south side of the south road, clear of the car parks.
+  walk("south-road-west", true, 2.5, [[11.5, 100.1], [18, 101.7], [35.4, 102.6]]),
+  walk("south-road-middle", true, 2.5, [[83.7, 102.8], [116.7, 102.8]]),
+  walk("south-road-east", true, 2.5, [[135.3, 102.7], [160.8, 102.7], [171, 98.6]]),
+  // West of civil-west-alley beside EN02, with a short arm east along its north forecourt.
+  walk("en02-west", true, 2.5, [[35.3, -101], [35.3, -29.5]]),
+  walk("en02-north", true, 2.5, [[35.3, -91.5], [63, -91.5]]),
+  // Steel-post covered walk between the canteen and the inner road (Street View Apr 2014).
+  walk("canteen-south", true, 2.5, [[42, -101.6], [82, -101.6]]),
+  // North road from EN15 (Street View x55,z-23); east of x90 the roof strip steps 2 m south
+  // as the road bends away, then turns south on the loop's west side.
+  walk("en15-north-walk", true, 2.5, [[41, -20.35], [84, -20.35], [90, -18], [172, -18], [177.5, -15], [179.3, -11.7], [179.2, 24], [179.3, 68]]),
+  walk("outer-west-path", false, 2, [[-60, -130], [-60, -40], [-61, 15], [-56, 39], [-44, 60]]),
 ];
 export const plazas = [
   { id: "agri-east-entrance", clearBuildings: true, polygon: rectangle(-59.5,-84,19,5.2) },
@@ -592,6 +558,21 @@ export const plazas = [
       [259, -8],
       [259, 45],
       [187.25, 45],
+    ],
+  },
+  {
+    // Concrete apron from Wittayawattana Rd to the EN08 south frontage and the west
+    // driveway under the carport (satellite z19 light strip + Street View May 2019).
+    id: "en08-south-apron",
+    polygon: [
+      [-168.5, 30],
+      [-146, 30],
+      [-146, 55.6],
+      [-108, 55.6],
+      [-108, 59],
+      [-143, 66],
+      [-147, 68.5],
+      [-157, 55],
     ],
   },
   {
